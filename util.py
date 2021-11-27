@@ -31,6 +31,8 @@ class Printer:
             elif text.endswith("&"):
                 sleep_time2 = float(text[-2])
                 text = text[:-2]
+            text = text.replace("{spiderName}", spiderName)
+            text = text.replace("{SpiderName}", SpiderName)
             time.sleep(sleep_time1)
             self.print_width(text)
             time.sleep(sleep_time2)
