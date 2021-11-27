@@ -1,9 +1,5 @@
 from game_objects import *
-from statuseffects import *
-from util import *
-from events import *
 from item import *
-import random
 
 end_game = False
 
@@ -26,30 +22,30 @@ class ActionType(Enum):
 
 
 class CommandParser(Printer):
-    def parseCommand(self, command):
-        commandParts = command.lower().rstrip().split(" ", 1)
-        actionName = commandParts[0]
-        if len(commandParts) > 1:
-            argument = commandParts[1]
+    def parse_command(self, command):
+        command_parts = command.lower().rstrip().split(" ", 1)
+        action_name = command_parts[0]
+        if len(command_parts) > 1:
+            argument = command_parts[1]
         else:
             argument = ''
 
-        if actionName in ['l', 'look', 'examine', 'e', 'inspect', 'observe'] and argument in ['around', 'surroundings',
-                                                                                              'room', '']:
+        if action_name in ['l', 'look', 'examine', 'e', 'inspect', 'observe'] and argument in ['around', 'surroundings',
+                                                                                               'room', '']:
             action = ActionType.LOOK_ROOM
-        elif actionName in ['l', 'look', 'examine', 'e', 'inspect', 'observe']:
+        elif action_name in ['l', 'look', 'examine', 'e', 'inspect', 'observe']:
             action = ActionType.LOOK
-        elif actionName in ['use', 'u', 'interact']:
+        elif action_name in ['use', 'u', 'interact']:
             if argument == '':
                 self.print('What would you like to interact with?')
                 action = ActionType.IGNORED
             else:
                 action = ActionType.USE
-        elif actionName in ['i', 'inv', 'inventory', 'storage']:
+        elif action_name in ['i', 'inv', 'inventory', 'storage']:
             action = ActionType.INVENTORY
-        elif actionName in ['exit', 'bye', 'goodbye', 'quit', 'stop']:
+        elif action_name in ['exit', 'bye', 'goodbye', 'quit', 'stop']:
             action = ActionType.EXIT
-        elif actionName in ['help', 'h', 'controls', 'ctrls', 'ctrl', 'c', 'rules']:
+        elif action_name in ['help', 'h', 'controls', 'ctrls', 'ctrl', 'c', 'rules']:
             action = ActionType.HELP
         else:
             action = ActionType.INVALID
@@ -62,54 +58,54 @@ class Player(Printer):
         self.lightingStatus = Lighting.DARK
         self.uvStatus = False
 
-    def getLightingStatus(self):
+    def get_lighting_status(self):
         from game_objects import candle, matches, torch
-        changeOfLight = False
+        change_of_light = False
         self.lightingStatus = Lighting.DARK
         if matches.lightEmit and matches.counter > 0:
             self.lightingStatus = Lighting.DIM
         elif matches.lightEmit or matches.counter > 0:
             matches.lightEmit = False
             matches.stopTick()
-            changeOfLight = True
+            change_of_light = True
         if candle.lightEmit:
             self.lightingStatus = Lighting.LIGHT
-        elif self.lightingStatus == Lighting.DARK and changeOfLight:
+        elif self.lightingStatus == Lighting.DARK and change_of_light:
             self.print('Shadows envelop you once more.')
             if torch.lightEmit and first['torch']:
-                LoseInnocence(self, 1)
+                lose_innocence(self, 1)
         return self.lightingStatus
 
-    def getUvStatus(self):
+    def get_uv_status(self):
         from game_objects import torch
         return torch.lightEmit
 
-    def addInv(self, item):
-        if item not in self.inv:
-            self.inv.append(item)
+    def add_inv(self, item):
+        if item not in player.inv:
+            player.inv.append(item)
         if isinstance(item, InvStack):
             item.increment()
 
-    def removeInv(self, item):
+    def remove_inv(self, item):
         if isinstance(item, InvStack):
             item.decrement()
             if item.count > 0:
                 return
-        self.inv.remove(item)
+        player.inv.remove(item)
 
     def act(self, com):
         from game_objects import empty_can
         from events import ratFocus
         parser = CommandParser()
-        parsedCommand = parser.parseCommand(com)
-        command = parsedCommand.command
-        argument = parsedCommand.argument
+        parsed_command = parser.parse_command(com)
+        command = parsed_command.command
+        argument = parsed_command.argument
         if command == ActionType.LOOK_ROOM:
             room.look(self)
         elif command == ActionType.LOOK:
-            room.lookAt(self, parsedCommand.argument)
+            room.lookat(self, parsed_command.argument)
         elif command == ActionType.USE:
-            self.use(room, parsedCommand.argument)
+            self.use(room, parsed_command.argument)
         elif command == ActionType.INVENTORY:
             if ratFocus:
                 self.print(obscureVision)
@@ -120,7 +116,7 @@ class Player(Printer):
                         invlist.append(item.names[0] + ' x ' + str(item.count))
                     else:
                         invlist.append(item.names[0])
-                self.print('You currently have: ' + (', ').join(invlist) + '.')
+                self.print('You currently have: ' + ', '.join(invlist) + '.')
         elif command == ActionType.HELP:
             self.controls()
         elif command == ActionType.EXIT:
@@ -130,15 +126,15 @@ class Player(Printer):
             self.print("Invalid command. For controls, type 'help'.")
 
     def use(self, room, itemName):
-        allItems = room.items + self.inv
+        allItems = room.items + player.inv
         for item in allItems:
             if itemName in item.names:
-                item.use(self, room.getLightingStatus(self), room.getUvStatus(self))
+                item.use(self, room.get_lighting_status(self), room.get_uv_status(self))
                 return
         self.print("You don't have that right now.")
 
     def tickAll(self):
-        allItems = self.inv + room.items
+        allItems = player.inv + room.items
         for item in allItems:
             if isinstance(item, Tickable):
                 item.tick()
@@ -154,33 +150,33 @@ class Room(Tickable):
         Tickable.__init__(self, tickActions)
 
     def addRoom(self, item):
-        self.items.append(item)
+        room.items.append(item)
 
     def removeRoom(self, item):
-        self.items.remove(item)
+        room.items.remove(item)
 
     def getLightingStatus(self, player):
         return Lighting(
-            max(self.lightingStatus.value, player.getLightingStatus().value)
+            max(self.lightingStatus.value, player.get_lighting_status().value)
         )
 
     def getUvStatus(self, player):
-        return self.uvStatus or player.getUvStatus()
+        return self.uvStatus or player.get_uv_status()
 
     def look(self, player):
         from game_objects import vending_machine
         from events import ratFocus
-        currentLightingStatus = self.getLightingStatus(player)
-        currentUvStatus = self.getUvStatus(player)
+        current_lighting_status = self.getLightingStatus(player)
+        current_uv_status = self.getUvStatus(player)
         if ratFocus:
-            if currentLightingStatus == Lighting.DARK:
+            if current_lighting_status == Lighting.DARK:
                 self.print(self.dark)
                 self.print("~4But somehow, you can still see it.3&")
             self.print("""There is a rat.
       ~2Its bloated eyes are staring right back at you.2&""")
         else:
-            if currentLightingStatus == Lighting.DARK:
-                if currentUvStatus:
+            if current_lighting_status == Lighting.DARK:
+                if current_uv_status:
                     self.print(self.uv)
                 elif vending_machine.count == 1:
                     self.print(keypadGlowing)
@@ -189,14 +185,14 @@ class Room(Tickable):
                     self.print(self.dark)
             else:
                 self.print(self.light)
-                for item in self.items:
+                for item in room.items:
                     if isinstance(item, ItemRoom):
-                        item.short_describe(currentLightingStatus, currentUvStatus)
+                        item.short_describe(current_lighting_status)
 
-    def lookAt(self, player, itemName):
-        allItems = player.inv + self.items
-        for item in allItems:
-            if itemName in item.names:
+    def lookat(self, player, item_name):
+        all_items = player.inv + room.items
+        for item in all_items:
+            if item_name in item.names:
                 item.describe(self.getLightingStatus(player), self.getUvStatus(player))
                 break
         else:
@@ -204,13 +200,15 @@ class Room(Tickable):
 
 
 room = Room("You are sitting before a wooden table.",
-            "It's too dark to see anything at the moment. You couldn't see your hands if you put them in front of your face.",
-            "You can discern very little other than the bluish purple gleam of the torch. You'll need to examine closer if you want to discover anything with it.",
+            "It's too dark to see anything at the moment. You couldn't see your hands if you put them in front of "
+            "your face.",
+            "You can discern very little other than the bluish purple gleam of the torch. You'll need to examine "
+            "closer if you want to discover anything with it.",
             Lighting.DARK, False, spider1_Tick)
 
 room.items = [arms, chair, coin_slot, display_case, keypad, legs, me, snack, table, you,
               candle, newspaper_article, vending_machine]
-room.hiddenitems = [dead_rat, dead_spider, money_box, rat, room_coin, spider]
+room.hidden = [dead_rat, dead_spider, money_box, rat, room_coin, spider]
 
 player = Player([])
 player.inv = [matches]

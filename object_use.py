@@ -5,25 +5,25 @@ bnc = False
 back = ['b', 'back', 'return', 'escape', 'esc']
 
 
-def easeToDark():
+def ease_to_dark():
     from main import player
     from game_objects import torch
-    if player.getLightingStatus() == Lighting.DARK:
+    if player.get_lighting_status() == Lighting.DARK:
         player.print("You're welcomed once more into a realm of merciful darkness.")
         if torch.lightEmit and first['torch']:
-            LoseInnocence(player, 1)
+            lose_innocence(player, 1)
 
 
-def MatchesUse(item, lightingStatus):
+def matches_use(item, ls):
     if item.counter > 0:
         if yn("Blow out matchstick? (yep/nope) ") == 0:
             item.stopTick()
             item.lightEmit = False
-            easeToDark()
+            ease_to_dark()
     elif item.count == 0:
         item.print("You don't have any matches left to light.")
     else:
-        if lightingStatus == Lighting.DARK:
+        if ls == Lighting.DARK:
             item.print('You strike a match. You start to discern some things in front of you.')
             if first['match']:
                 item.print('~2..Turn back now. This is your final warning.2&')
@@ -35,9 +35,9 @@ def MatchesUse(item, lightingStatus):
         item.lightEmit = True
 
 
-def candleUse(item, lightingStatus):
+def candle_use(item, ls):
     from game_objects import matches
-    if lightingStatus == Lighting.DIM:
+    if ls == Lighting.DIM:
         if first['candle']:
             item.print("""As you transfer the flame of the match to the candle, you are taken aback by how vibrantly the wick blazes up.
       ~3It is as though the candle has been aching for this precise moment for a very, very long time.
@@ -53,10 +53,10 @@ def candleUse(item, lightingStatus):
         if yn('Blow out candle? (yup/nup) ') == 0:
             item.print('You swear the flame gives out a scream as you snuff it out with ease.2&')
             item.lightEmit = False
-            easeToDark()
+            ease_to_dark()
 
 
-def LoseInnocence(item, num):
+def lose_innocence(item, num):
     if num == 1:
         item.print("~2The faintness of the torch remains the same, dimmer than ever.")
     item.print("""~3...
@@ -64,13 +64,13 @@ def LoseInnocence(item, num):
     first['torch'] = False
 
 
-def TorchUse(item, lightingStatus):
+def torch_use(item, ls):
     from game_objects import torch
-    if torch.lightEmit == False:
+    if not torch.lightEmit:
         item.print('A muted blue glow shines out from the torch, barely visible to the eye.')
-        if lightingStatus == Lighting.DARK and first['torch']:
-            LoseInnocence(item, 0)
-        elif first['torch'] == False:
+        if ls == Lighting.DARK and first['torch']:
+            lose_innocence(item, 0)
+        elif not first['torch']:
             item.print('Another great example of a pathetic UV flashlight.')
     else:
         item.print('You turn off the torch.')
@@ -85,7 +85,7 @@ news = [['DADADADADA', 'Someone went missing..', 'SECRET MESSAGE!!!'],
          "double psyche >:)"]]
 
 
-def newsFlip(item, lightStatus):
+def news_flip(item, ls):
     from game_objects import torch, coin
     from main import player
     ans = None
@@ -93,23 +93,23 @@ def newsFlip(item, lightStatus):
     n = ['n', 'next', 'next']
     b = back
     while ans != b:
-        if lightStatus == Lighting.LIGHT:
+        if ls == Lighting.LIGHT:
             item.print('\n' + news[item.count][0] + '\n\n' + news[item.count][1] + '\n')
-        elif lightStatus == Lighting.DIM:
+        elif ls == Lighting.DIM:
             item.print(f"""It is a newspaper article with the headline: {news[item.count][0]}.
       You'll need some more light to read all of it.""")
         if torch.lightEmit:
             if first['uv_news']:
                 item.print("""~4Oh.
         ~1The torchlight reveals something else written on the newspaper.3&""")
-                if lightStatus != Lighting.DARK:
+                if ls != Lighting.DARK:
                     item.print("""A series of annotations, urgently scrawled out on its margins.2&
           The light is feeble, so you'll need to darken the room to see it more clearly.2&""")
                 first['uv_news'] = False
-            elif lightStatus != Lighting.DARK:
+            elif ls != Lighting.DARK:
                 item.print("""The torchlight reveals something else written on the newspaper: a series of annotations, urgently scrawled out on its margins.
                    The light is feeble, so you'll need to darken the room to see it more clearly.""")
-            if lightStatus == Lighting.DARK:
+            if ls == Lighting.DARK:
                 item.print('\n' + news[item.count][0] + '\n\n' + news[item.count][2] + '\n')
         if item.count == 0:
             ans = multi(None, "(Type 'next' to move between articles. Type 'back' to return.) ", (b, n), None, True,
@@ -129,11 +129,11 @@ def newsFlip(item, lightStatus):
     if first['coin'] == 1:
         item.print("""As you're rifling through the pages, a single coin falls to the table, spinning and rattling briefly as it comes to a stop near your fingertips.
     ~5You take the coin.1&""")
-        player.addInv(coin)
+        player.add_inv(coin)
         first['coin'] = 2
 
 
-def snackDescribe(item, ls):
+def snack_describe(item):
     from main import player, room
     treats = []
     for items in player.inv:
@@ -142,12 +142,12 @@ def snackDescribe(item, ls):
     if len(treats) == 0:
         item.print("You'll need to buy one first.")
     elif len(treats) == 1:
-        items.describe(room.getLightingStatus(player), room.getUvStatus(player))
+        items.describe(room.get_lighting_status(player), room.get_uv_status(player))
     else:
         item.print("Which snack are you referring to?")
 
 
-def snackUse(item, ls):
+def snack_use(item):
     from main import player, room
     treats = []
     for items in player.inv:
@@ -156,19 +156,19 @@ def snackUse(item, ls):
     if len(treats) == 0:
         item.print("You'll need to buy one first.")
     elif len(treats) == 1:
-        items.use(player, room.getLightingStatus(player), room.getUvStatus(player))
+        items.use(player, room.get_lighting_status(player), room.get_uv_status(player))
     else:
         item.print("Which snack are you referring to?")
 
 
-def KeypadNope(item, ans):
+def keypad_nope(item, ans):
     if len(ans) > 3:
         item.print("You can only enter a maximum of 3 digits.")
     elif ans.isnumeric():
         item.print('Invalid number. Item does not exist.')
 
 
-def endVending():
+def end_vending():
     from game_objects import room_coin, vending_machine
     from main import room
     if first['machine'] == 1:
@@ -178,7 +178,7 @@ def endVending():
     room.addRoom(room_coin)
 
 
-def VendingUse(item, lightStatus):
+def vending_use(item):
     from game_objects import vending_machine, coin, room_coin, money_box, keypad, snack7, torch, coin_slot
     from main import player, room
     if item == money_box and room_coin not in room.items:
@@ -194,30 +194,29 @@ def VendingUse(item, lightStatus):
             return
         else:
             item.print('You insert the coin into the vending machine. The keypad glows up, faint as it may be.')
-            player.removeInv(coin)
+            player.remove_inv(coin)
             if first['machine'] == 0:
                 item.print("""~3...wow.
         ~2it...still works.2&""")
                 first['machine'] += 1
             vending_machine.increment()
     if vending_machine.count == 1:
-        snack = None
         while True:
             code = int(multi(item, "Enter number into keypad (press 'back' to return): ",
                              (['001', '01', '1'], ['002', '02', '2'], ['003', '03', '3'],
                               ['004', '04', '4'], ['005', '05', '5'], ['006', '06', '6'],
                               ['007', '07', '7'], ['008', '08', '8'], ['009', '09', '9'],
                               ['333'],
-                              back), KeypadNope, False, False))
+                              back), keypad_nope, False, False))
             if code == 10:
                 return
             elif code == 9:
                 if torch not in player.inv:
-                    item.print("""The vending machine whirrs into action, then with a small clank, produces a single..
+                    item.print("""The vending machine whirs into action, then with a small clank, produces a single..
           ~4...torch.
           ~2You take it with you.1&""")
-                    player.addInv(torch)
-                    endVending()
+                    player.add_inv(torch)
+                    end_vending()
                     return
                 else:
                     item.print('This product is already sold out.')
@@ -230,35 +229,38 @@ def VendingUse(item, lightStatus):
 
         if snack == snack7:
             item.print(
-                f"The vending machine whirrs into action, then with a small clank, produces a single {snack.names[0]}. You take it.")
+                f"The vending machine whirs into action, then with a small clank, produces a single {snack.names[0]}."
+                f" You take it.")
             if snack7.inVend == 5:
                 item.print("~2..Don't drink too much, ok?2&")
             elif snack7.inVend <= 3:
                 item.print('~2...1&')
         else:
             item.print(
-                f"The vending machine whirrs into action, then with a small clank, produces a single packet of {snack.names[0]}. You take the snack.")
-        player.addInv(snack)
+                f"The vending machine whirs into action, then with a small clank, produces a single packet of "
+                f"{snack.names[0]}. You take the snack.")
+        player.add_inv(snack)
         snack.inVend -= 1
         if snack.inVend == 0:
             item.print('This product is now sold out.')
-        endVending()
+        end_vending()
     else:
         item.print('You retrieve the gold coin from the money box.')
         room.removeRoom(room_coin)
-        player.addInv(coin)
+        player.add_inv(coin)
         vending_machine.count = 0
 
 
-def spiderUseAgain(item, ans):
+def spider_use_again(item):
     item.print("I don't understand what you want.")
 
 
-def spiderKill(item):
+def spider_kill(item):
     from game_objects import dead_spider, monster_energy_gun
     from main import room
     item.print(
-        "~3Yes you monster, you horribly slaughter the innocent creature by pounding into it with your Energy Gun over and over until it stops twitching, are you happy now?")
+        "~3Yes you monster, you horribly slaughter the innocent creature by pounding into it with your Energy Gun over "
+        "and over until it stops twitching, are you happy now?")
     room.removeRoom(item)
     room.addRoom(dead_spider)
     monster_energy_gun.Description = ["""...
@@ -279,7 +281,7 @@ def theyit(string, plus):
     return string, string + ' it', string + ' them'
 
 
-def spiderUse(item, lightStatus):
+def spider_use(item):
     global bnc, spiderName
     from game_objects import monster_energy_gun, snack9, dead_rat, spider
     from main import player, room
@@ -333,20 +335,20 @@ def spiderUse(item, lightStatus):
                   theyit('startle', None), theyit('surprise', None),
                   theyit('unnerve', None),
                   ('creep out', 'creep it out', 'creep them out', 'freak out', 'freak it out', 'freak them out')]
-                 ), spiderUseAgain, False, True)
+                 ), spider_use_again, False, True)
     if ans == 0:
         return
     elif ans == 1:
         if monster_energy_gun in player.inv:
-            spiderKill(item)
+            spider_kill(item)
         else:
             item.print("""...
       ~2ahaha
       ~1You don't even have a gun!3&""")
     elif ans == 2:
         feed = input(f"What would you like to feed them? ")
-        allItems = room.items + player.inv
-        for item in allItems:
+        all_items = room.items + player.inv
+        for item in all_items:
             if feed in item.names:
                 if feed in snack9.names:
                     item.print(f"""You feed {spiderName} a packet of Berries and Cream.
@@ -367,11 +369,11 @@ def spiderUse(item, lightStatus):
     ~2They begin to dance...2&""")
         if bnc:
             #      playsound('little_lad_dance.mp3')
-            spiderStatus = f'{SpiderName} is doing the Little Lad Dance :))'
+            spiderstatus = f'{SpiderName} is doing the Little Lad Dance :))'
             bnc = False
         else:
             #      playsound('spider_dance.mp3')
-            spiderStatus = 'The arachnid sways erratically to the non-diegetic music.'
+            spiderstatus = 'The arachnid sways erratically to the non-diegetic music.'
     elif ans == 4:
         if first['spider'] < 5:
             item.print("Not yet. You need to get to know them better first :)")
@@ -379,33 +381,33 @@ def spiderUse(item, lightStatus):
             spiderName = input("What would you like to name them? ")
             spider.names = ['spider']
             if spiderName:
-                namingCeremony(spiderName)
+                naming_ceremony(spiderName)
                 item.print(f"The spider will now be referred to as {spiderName} :DD")
             else:
                 item.print("The spider will simply be referred to as a 'spider' from now on.")
 
     else:
-        spiderResponse = ['', '', '', '', '',
-                          """No need to be afraid!
+        spider_response = ['', '', '', '', '',
+                           """No need to be afraid!
     ~1They're just a spider after all...1&""",
-                          ':)',
-                          f"""You exchange a knowing glance with {spiderName}.
+                           ':)',
+                           f"""You exchange a knowing glance with {spiderName}.
     ~2swag.1&""",
-                          f"""You pet {spiderName}.
+                           f"""You pet {spiderName}.
     ~2Fluffy. It gives you an oddly comforting shiver down your spine.""",
-                          f"""You poke {spiderName}.
+                           f"""You poke {spiderName}.
     ~2somft.1&""",
-                          f"""You hold {spiderName} like a borger.
+                           f"""You hold {spiderName} like a borger.
     They wriggle in your grasp.""",
-                          f"""You hug {spiderName}.
+                           f"""You hug {spiderName}.
     ~2{SpiderName} is stunned. They look up at you inquisitively.""",
-                          f"""You tickle {spiderName}.
+                           f"""You tickle {spiderName}.
     ~2{SpiderName} isn't impressed.""",
-                          "~1You wonder, do spiders blush?1&",
-                          f"""You give {spiderName} a heartfelt kiss.
+                           "~1You wonder, do spiders blush?1&",
+                           f"""You give {spiderName} a heartfelt kiss.
     ~2Aww <33""",
-                          "As much as that is adorable, this is not a dating sim.",
-                          """~2Y'know.
+                           "As much as that is adorable, this is not a dating sim.",
+                           """~2Y'know.
     ~2There was a tiny, insignificant, foolish spider
     ~3who one day decided to climb a drainpipe.
     ~3heh.
@@ -423,38 +425,38 @@ def spiderUse(item, lightStatus):
     ~2Because it's as though the storm never really happened.
     ~3Still, the question remains:
     ~3Will the itsy-bitsy spider climb up the spout again?3&""",
-                          f""""You show off to {spiderName} with your well-practised disppearing thumb trick.
+                           f""""You show off to {spiderName} with your well-practised disappearing thumb trick.
     ~3{spiderName}'s eyes visibly widen as they try to comprehend this phenomenon.2&""",
-                          """~~~0.5I..um...
+                           """~~~0.5I..um...
     ~1Please do not eat the spider.
     ~1There's literally a snack machine in front of you
     ~2So Please don't do that, ok?1&""",
-                          """...
+                           """...
     ~2What would you do that for?
     ~~~1.5Why???""",
-                          """~1No.
+                           """~1No.
     ~1Why would a person like you do such a thing.
     ~2Do not even think about it.""",
-                          """~2aaaa
+                           """~2aaaa
     ~2aaaaaaaaaaaa
     ~3AaaaAAAAAAAAaaaaAAAAAAAAAAAAAAAAAAAAAA...
     ~5..don't you dare.2&""",
-                          "~2You're scary.1&",
-                          "~2You're boring.1&",
-                          """...2&
+                           "~2You're scary.1&",
+                           "~2You're boring.1&",
+                           """...2&
     mhm.~1""",
-                          """Gahh!!!
+                           """Gahh!!!
     ~1Stop making loud noises like that! >:(1&"""
-                          ]
-        item.print(spiderResponse[ans])
+                           ]
+        item.print(spider_response[ans])
     return
 
 
-def canTrick(self, lightStatus):
+def can_use(self, ls):
     from game_objects import monster_energy_gun
     from main import player
     if self.count == 7:
-        if lightStatus == Lighting.DARK:
+        if ls == Lighting.DARK:
             self.print(needLight)
         else:
             self.print("""...
@@ -469,13 +471,13 @@ def canTrick(self, lightStatus):
       ~2ahahahahaha...
       ~4Happy now?2&""")
             self.count = 1
-            player.removeInv(self)
-            player.addInv(monster_energy_gun)
+            player.remove_inv(self)
+            player.add_inv(monster_energy_gun)
     else:
         self.print("This item is practically worthless now.")
 
 
-def monsterUse(item, lightStatus):
+def monster_use(item):
     from game_objects import empty_can
     from main import player
     item.countAll += 1
@@ -485,10 +487,11 @@ def monsterUse(item, lightStatus):
     ~2All that remains is an empty can.2&""")
     if num == 2:
         item.print(
-            "You down another drink! Woo, you feel your senses buzzing as you shift into a state of hyperfocus on the task at hand.4&")
+            "You down another drink! Woo, you feel your senses buzzing as you shift into a state of hyperfocus on the "
+            "task at hand.4&")
     if num == 3:
         item.print("""You guzzle down another can!! Boy are you feeling ambitious today! hehe
-    ~3Even so, you think to yourself that it would be detrimental to your health if you indulged yourself any futher.4&""")
+    ~3Even so, you think to yourself that it would be detrimental to your health if you indulged yourself any further.4&""")
     if num == 4:
         item.print("""Glug,
     ~1glug,
@@ -523,4 +526,4 @@ def monsterUse(item, lightStatus):
     ~2
     ~~~0.5Just please...
     ~4DON'T BLAME YOURSELF FOR THIS!!!!3&""")
-    player.addInv(empty_can)
+    player.add_inv(empty_can)

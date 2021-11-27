@@ -17,7 +17,7 @@ arms = Item(
      'What would you like to use them for?'])
 
 
-def bright_candle(item, lightStatus):
+def bright_candle(item):
     item.print(item.Description[1])
     item.print("""It is burning passionately.
   Wax occasionally rolls down its side like tears.""")
@@ -28,7 +28,7 @@ candle = ItemCandle(["candle", 'candlestick'],
                      "A skinny candle stands tall before you, burning with vehemence."],
                     [None,
                      "The skinny candle stands atop a rusted, bronze candlestick. It's your favourite fragrance too.",
-                     bright_candle], [candleUse], False)
+                     bright_candle], [candle_use], False)
 
 chair = Item(['chair', 'seat', 'armchair', 'wooden chair', 'wooden seat', 'wooden armchair'],
              [None, """It's a slightly cramped but comfy wooden armchair, complete with a tattered cushion.
@@ -41,16 +41,14 @@ chair = Item(['chair', 'seat', 'armchair', 'wooden chair', 'wooden seat', 'woode
              [notStanding, None, notStanding])
 
 
-def keypadGlow(item, lightStatus):
-    from game_objects import vending_machine
+def keypad_glow(item):
     if vending_machine.count == 1:
         item.print(keypadGlowing)
     else:
         item.print(TooDark)
 
 
-def keypadGlowUse(item, lightStatus):
-    from game_objects import vending_machine
+def keypad_glow_use(item):
     if vending_machine.count == 1:
         item.print("The glow of the keypad isn't quite bright enough for you to operate the machine.")
     elif item == coin:
@@ -60,9 +58,9 @@ def keypadGlowUse(item, lightStatus):
 
 
 coin_slot = Item(['coin slot'],
-                 [keypadGlow, None,
+                 [keypad_glow, None,
                   "The vending machine generously provides a coin slot, with which to leech its users of their money."],
-                 [keypadGlowUse, None, VendingUse])
+                 [keypad_glow_use, None, vending_use])
 
 display_case = Item(
     ['display case', 'display chamber', 'glass display chamber', 'case', 'glass case', 'glass display case'],
@@ -74,9 +72,9 @@ display_case = Item(
   ~4Guess you'll have to access its contents via the conveniently-provided coin slot and keypad instead.4&"""])
 
 keypad = Item(['keypad', 'keyboard'],
-              [keypadGlow, "It's a set of buttons for using the vending machine.",
+              [keypad_glow, "It's a set of buttons for using the vending machine.",
                "It's a set of buttons from 0 to 9, including a 'Clear' button and an 'Enter' button."],
-              [keypadGlowUse, None, VendingUse])
+              [keypad_glow_use, None, vending_use])
 
 legs = Item(
     ['leg', 'legs', 'foot', 'feet', 'toe', 'toes'],
@@ -91,20 +89,21 @@ me = Item(
   ~1You aren't making any sense.1&"""])
 
 
-def lightRoomNews(item, lightStatus):
+def light_room_news(item):
     item.print(
-        f"There is a messy pile of newspaper articles shoved to the left side of the table. The headline at the top reads: {news[item.count][0]}")
+        f"There is a messy pile of newspaper articles shoved to the left side of the table. The headline at the top "
+        f"reads: {news[item.count][0]}")
 
 
 newspaper_article = ItemRoomStack(
     ['newspaper article', 'newspaper articles', 'newspaper', 'newspapers', 'papers', 'article', 'articles', 'na',
      'news'],
-    ["There is a stack of papers on one side of the table. Newspapers, perhaps.", lightRoomNews],
-    [None, None, newsFlip, newsFlip], [None, None, newsFlip, newsFlip], 0)
+    ["There is a stack of papers on one side of the table. Newspapers, perhaps.", light_room_news],
+    [None, None, news_flip, news_flip], [None, None, news_flip, news_flip], 0)
 
 snack = Item(
     ['snack', 'snacks', 'treat', 'treats', 'junk food', 'junk food'],
-    [snackDescribe, None, snackDescribe], [snackUse, None, snackUse])
+    [snack_describe, None, snack_describe], [snack_use, None, snack_use])
 
 table = Item(
     ['table', 'wooden table'],
@@ -112,8 +111,7 @@ table = Item(
     ["The table is too heavy to move."])
 
 
-def moneyBoxStatus(item, lightStatus):
-    from game_objects import vending_machine, coin
+def money_box_status(item):
     from main import player
     item.print("The money box is disjointed from the vending machine, so you can take out any coins with ease.")
     if vending_machine.count == 1 or coin in player.inv:
@@ -122,13 +120,12 @@ def moneyBoxStatus(item, lightStatus):
         item.print('You see a single coin glistening within it.')
 
 
-def vendingAha(item, lightStatus):
-    from game_objects import money_box
+def vending_aha(item, ls):
     from main import room
-    if lightStatus == Lighting.DARK:
+    if ls == Lighting.DARK:
         item.print("It's too dark to see.")
         return
-    elif lightStatus == Lighting.LIGHT:
+    elif ls == Lighting.LIGHT:
         item.print("""It's a small table-top vending machine, containing an assortment of junk food.
   The snacks in the display chamber are labelled from 1 to 9, all of which can be accessed from the keypad.
   (dw it was restocked a few days ago, so it's safe to eat.)""")
@@ -140,14 +137,14 @@ def vendingAha(item, lightStatus):
         first['machine'] = 3
         room.addRoom(money_box)
     if first['machine'] == 3:
-        moneyBoxStatus(item, lightStatus)
+        money_box_status(item)
 
 
 vending_machine = ItemRoomStack(
     ['vending machine', 'machine', 'snack machine', 'vending', 'box'],
     ["You see the outline of a box. There seems to be a display case with something inside it.",
      "You see some snacks on display in a small shabby vending machine."],
-    [keypadGlow, None, vendingAha], [keypadGlowUse, None, VendingUse], 0)
+    [keypad_glow, None, vending_aha], [keypad_glow_use, None, vending_use], 0)
 
 you = Item(
     ['you', 'us'],
@@ -188,10 +185,10 @@ dead_spider = Item(['smear', 'spider', 'stain'],
   ~1ALONE.3&"""])
 
 money_box = Item(['money box', 'coin box'],
-                 [moneyBoxStatus], [VendingUse])
+                 [money_box_status], [vending_use])
 
 
-def ratPoem(item, lightStatus):
+def rat_poem(item):
     if first['rat'] == 0:
         item.print("""~2Every breath you take,
     ~~~1.5Every thought you shake,
@@ -226,35 +223,35 @@ def ratPoem(item, lightStatus):
 
 rat = Item(
     ['rat', 'ratthew'],
-    [ratPoem, None, ratPoem], [])
+    [rat_poem, None, rat_poem], [])
 
 room_coin = Item(
     ['coin', 'gold coin'],
     ["You'll need to take it out of the vending machine first.", None,
      "You'll need to take it out of the vending machine first."],
-    [VendingUse])
+    [vending_use])
 
 
-def SpiderStatus(item, lightStatus):
-    from events import spiderStatus
-    item.print(spiderStatus)
+def spider_status(item):
+    from events import spiderstatus
+    item.print(spiderstatus)
 
 
-def spiderDescribe(item, lightStatus):
-    SpiderStatus(item, lightStatus)
+def spider_describe(item, ls):
+    spider_status(item)
     item.print(f"""{SpiderName} is hairy with huge protruding legs.
   A huntsman perhaps?""")
-    if lightStatus == Lighting.LIGHT:
+    if ls == Lighting.LIGHT:
         item.print("You also think they're a huntsman because of the lack of cobwebs around.")
 
 
 spider = ItemRoom(
-    ['spider'], [SpiderStatus],
-    [spiderDescribe], [spiderUse])
+    ['spider'], [spider_status],
+    [spider_describe], [spider_use])
 
 
 # Inventory
-def matchesDescriptionDark(item, lightStatus):
+def matches_description_dark(item):
     item.print(f"""You reach into your pocket and feel the rough texture of a box.""")
     amount = 'several'
     if item.count <= 0:
@@ -275,7 +272,7 @@ def matchesDescriptionDark(item, lightStatus):
     They are cold and brittle, dead as bones.""")
 
 
-def matchesDescriptionLight(item, lightStatus):
+def matches_description_light(item):
     if item.count <= 0:
         item.print("There are no more matches left.")
     elif item.count <= 10:
@@ -287,32 +284,31 @@ def matchesDescriptionLight(item, lightStatus):
   There is also an illustration of a lady in a black kimono alongside a pictogram of a torch.""")
 
 
-def matchesBurnt():
-    from game_objects import matches
+def matches_burnt():
     from main import player
     player.print("""The flame of the match travels down the stick, nearly burning your fingers.
   You instinctively drop the matchstick onto the ground and stamp it out with your foot.""")
     matches.stopTick()
-    player.getLightingStatus()
+    player.get_lighting_status()
 
 
 matches = InvMatches(
     ['matches', 'matchbox', 'match', 'matchstick', 'matchsticks'],
-    [matchesDescriptionDark, None, matchesDescriptionLight],
-    [MatchesUse, None, MatchesUse], 47, False, [None, None, None, matchesBurnt])
+    [matches_description_dark, None, matches_description_light],
+    [matches_use, None, matches_use], 47, False, [None, None, None, matches_burnt])
 
 # Hidden Inventory Items
 coin = Item(
     ['coin', 'gold coin'],
     ["You feel its cold surface hard against the palm of your hand.", None,
      "A simple coin. Nothing much else to speak of."],
-    [keypadGlowUse, None, VendingUse])
+    [keypad_glow_use, None, vending_use])
 
 empty_can = InvStack(
     ['empty can', 'can', 'monster can', 'monster energy can'],
     ["The can is significantly lighter than before. Its cylindrical surface cools your palm.", None,
      "It's a can with three claw marks dug onto its side. It's empty, but otherwise intact."],
-    [canTrick, None, canTrick], 0)
+    [can_use, None, can_use], 0)
 
 monster_energy_gun = Item(
     ['Monster Energy Gun', 'monster energy gun', 'gun', 'monster gun', 'energy gun'],
@@ -323,18 +319,18 @@ monster_energy_gun = Item(
      "~2I recommend you don't go swinging that thing around."])
 
 
-def torchDescribe(item, lightStatus):
+def torch_describe(item, ls):
     if first['torch']:
-        if lightStatus == Lighting.DARK:
+        if ls == Lighting.DARK:
             item.print("""It's a mini-torch. You can feel its cylindrical shape, cold and metallic against your hand.
       Wonder what it does...?""")
         else:
             item.print("It's a blue mini-torch. Wonder what it does..?")
     else:
         item.print("It's one of those cheapjack LED mini-torches you might see in Officeworks.")
-        if lightStatus == Lighting.DARK:
+        if ls == Lighting.DARK:
             item.print("You can feel its cylindrical shape, cold and metallic in your hand.")
-        if first['uv_news'] == False:
+        if not first['uv_news']:
             item.print("It also happens to be a UV flashlight, which neither improves nor excuses its quality.")
         item.print('Whoever made these puzzles must have really regretted this purchase.')
 
@@ -342,13 +338,14 @@ def torchDescribe(item, lightStatus):
 torch = InvTorch(
     ['torch', 'mini-torch', 'mini torch', 'flashlight', 'uv', 'uv light', 'uv torch', 'uv mini torch', 'uv mini-torch',
      'uv flashlight'],
-    [torchDescribe, None, torchDescribe], [TorchUse, None, TorchUse], False)
+    [torch_describe, None, torch_describe], [torch_use, None, torch_use], False)
 
 
 # Snacks
-def friendShape(item, lightStatus):
+def friend_shape(item):
     item.print(
-        f"You nibble the phrog. You are now filled with {''.join(random.choices(['serotonin.', 'hunger.', 'ANGERRRRR'], [0.75, 0.2, 0.05]))}")
+        f"You nibble the phrog. You are now filled with"
+        f" {''.join(random.choices(['serotonin.', 'hunger.', 'ANGERRRRR'], [0.75, 0.2, 0.05]))}")
 
 
 snack1 = InvSnack(
@@ -357,19 +354,21 @@ snack1 = InvSnack(
      """Made of 75% serotonin, 20% hunger.
   ~2and of course, 5% ANGER :)
   ~2(NOTE: No phrogs were harmed during the making of this game.)"""],
-    friendShape,
+    friend_shape,
     0, 10)
 
 snack2 = InvSnack(['PEPCORN', 'pepcorn'],
                   [
-                      "You shake the package, attempting to breathe in the spiciness of the Lao Gan Ma Spicy Chilli Crisp.",
+                      "You shake the package, attempting to breathe in the spiciness of the Lao Gan Ma Spicy Chilli "
+                      "Crisp.",
                       None,
                       '"Perhaps my favourite snack of all time." - bdg'],
-                  "Oh!!! Such a delicious, savory, a little bit spicy,, pepcorn. Truly the height of human creation :))",
+                  "Oh!!! Such a delicious, savory, a little bit spicy,, pepcorn. Truly the height of human creation "
+                  ":))",
                   0, 8)
 
 
-def crispType(item, lightStatus):
+def crisp_type(item):
     item.print("""Crisps come in all shapes and sizes. Some are soggy, some are too salty, some are burnt, 
     some are green.
   ~5Some are just right.
@@ -381,7 +380,7 @@ snack3 = InvSnack(['generic crisps', 'crisps'],
                    None,
                    "The fluorescent colours of the packaging reveals that the manufacturers had given up marketing "
                    "this as healthy food a long time ago."],
-                  crispType, 0, 9)
+                  crisp_type, 0, 9)
 
 snack4 = InvSnack(
     ['Smarttles', 'smarttles'],
@@ -412,7 +411,7 @@ snack7 = SpecialSnack(
     ['Monster Energy drink', 'monster energy drink', 'monster', 'energy drink', 'monster energy'],
     ["The cylindrical can is cool against your hand.", None,
      "It's a can with three claw marks dug onto its side. What more is there to say?"],
-    monsterUse, 0, 0, 7)
+    monster_use, 0, 0, 7)
 
 snack8 = InvSnack(
     ["Isnott's Trapezoids", "isnott's trapezoids", "isnotts trapezoids", "isnotts", "isnott's", 'isnott', 'trapezoids'],

@@ -5,7 +5,7 @@ from statuseffects import *
 first = {'match': True, 'candle': True, 'coin': 0, 'machine': 0,
          'snack': True, 'spider': 0, 'torch': True, 'rat': 0, 'uv_news': True}
 spiderName, SpiderName = 'the spider', 'The spider'
-spiderStatus = f'{SpiderName} scuttles around on top of the vending machine, disorientedly.'
+spiderstatus = f'{SpiderName} scuttles around on top of the vending machine, disorientedly.'
 ratFocus = False
 
 
@@ -52,17 +52,17 @@ def intro():
 def events():
     from game_objects import spider
     from main import player, room
-    global spiderStatus
+    global spiderstatus
     if room.counter == 0:
         room.stopTick()
-    if first['spider'] == 1 and player.getLightingStatus() != Lighting.DARK:
+    if first['spider'] == 1 and player.get_lighting_status() != Lighting.DARK:
         player.print('~2There is a large furry spider before you!!')
         spider1()
         first['spider'] = 3
     elif first['spider'] == 2:
         first['spider'] = 3
     elif first['spider'] == 3:
-        player.print(spiderStatus)
+        player.print(spiderstatus)
         first['spider'] = 4
     if room.tickActions == spider1_Tick and room.counter == 0 and not first['torch']:
         room.tickActions = rat_Tick
@@ -76,7 +76,7 @@ def events():
             room.tickActions = ratAttack_Tick
         room.startTick()
     if room.tickActions == ratHunt_Tick and room.counter == 0 and spider in room.items and \
-            player.getLightingStatus() != Lighting.DARK and first['spider'] < 5:
+            player.get_lighting_status() != Lighting.DARK and first['spider'] < 5:
         spider_friend()
 
 
@@ -102,21 +102,21 @@ spider1_Tick = [
 def spider_tense(count):
     from game_objects import spider
     from main import player, room
-    global spiderStatus
-    lightStatus = player.getLightingStatus()
+    global spiderstatus
+    light_status = player.get_lighting_status()
     if len(count) == 3:
-        spiderStatus = count[1]
+        spiderstatus = count[1]
         oblivious = count[2]
-        if lightStatus == Lighting.DARK and (
+        if light_status == Lighting.DARK and (
                 oblivious == "~2Something furry brushes past your hand." or spider not in room.items):
             player.print(oblivious)
         elif spider in room.items:
-            player.print(spiderStatus)
+            player.print(spiderstatus)
             if first['spider'] == 2:
                 first['spider'] = 3
     else:
         first['spider'] = 1
-        if lightStatus == Lighting.DARK:
+        if light_status == Lighting.DARK:
             player.print('~1Clink1&')
         else:
             player.print('~2A large furry spider emerges on top of the vending machine!!')
@@ -127,7 +127,7 @@ def spider1():
     from main import player, room
     from game_objects import monster_energy_gun, spider
     from util import multi
-    from object_use import spiderKill
+    from object_use import spider_kill
     room.addRoom(spider)
     first['spider'] = 2
     ans = multi(None, 'Do you run or fire your gun or let it be? ',
@@ -139,7 +139,7 @@ def spider1():
     ~1You looked it up on wikipedia once.1&""")
     elif ans == 1:
         if monster_energy_gun in player.inv:
-            spiderKill(spider)
+            spider_kill(spider)
             return
         else:
             player.print("""~2...
@@ -222,7 +222,7 @@ def rat_tense(count):
     from game_objects import rat, spider
     from main import player, room
     global ratFocus
-    print(spiderStatus)
+    print(spiderstatus)
     if len(count) == 3:
         if spider in room.items:
             player.print(count[1])
@@ -242,12 +242,12 @@ def rat_tense(count):
 def rat_kill(count):
     from game_objects import dead_rat, rat, spider, monster_energy_gun
     from main import player, room
-    global ratFocus, spiderStatus
+    global ratFocus, spiderstatus
     player.print(count[1])
     if len(count) == 3:
         if spider in room.items:
             if count[2] == '1':
-                spiderStatus = count[1]
+                spiderstatus = count[1]
             else:
                 room.removeRoom(dead_rat)
     else:
@@ -255,7 +255,7 @@ def rat_kill(count):
         room.removeRoom(rat)
         room.addRoom(dead_rat)
         if spider in room.items:
-            spiderStatus = f"{SpiderName} carefully assesses their new kill."
+            spiderstatus = f"{SpiderName} carefully assesses their new kill."
         else:
             monster_energy_gun.Description = [""""...
       ~2I understand that you have been through...a lot.
