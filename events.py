@@ -54,7 +54,7 @@ def events():
     from main import player, room
     global spiderstatus
     if room.counter == 0:
-        room.stopTick()
+        room.stop_tick()
     if first['spider'] == 1 and player.get_lighting_status() != Lighting.DARK:
         player.print('~2There is a large furry spider before you!!')
         spider1()
@@ -66,7 +66,7 @@ def events():
         first['spider'] = 4
     if room.tickActions == spider1_Tick and room.counter == 0 and not first['torch']:
         room.tickActions = rat_Tick
-        room.startTick()
+        room.start_tick()
     if first['rat'] == 1:
         first['rat'] = 2
     if room.tickActions == rat_Tick and room.counter == 0 and first['rat'] == 2:
@@ -74,7 +74,7 @@ def events():
             room.tickActions = ratHunt_Tick
         else:
             room.tickActions = ratAttack_Tick
-        room.startTick()
+        room.start_tick()
     if room.tickActions == ratHunt_Tick and room.counter == 0 and spider in room.items and \
             player.get_lighting_status() != Lighting.DARK and first['spider'] < 5:
         spider_friend()
@@ -128,7 +128,7 @@ def spider1():
     from game_objects import monster_energy_gun, spider
     from util import multi
     from object_use import spider_kill
-    room.addRoom(spider)
+    room.add_room(spider)
     first['spider'] = 2
     ans = multi(None, 'Do you run or fire your gun or let it be? ',
                 (['run'], ['fire', 'gun', 'fire gun', 'fire my gun'], ['let it be', 'let be']), None, False, False)
@@ -230,7 +230,7 @@ def rat_tense(count):
             player.print(count[2])
     else:
         if rat not in room.items:
-            room.addRoom(rat)
+            room.add_room(rat)
             ratFocus = True
         elif first['rat'] == 1:
             first['rat'] = 2
@@ -249,13 +249,13 @@ def rat_kill(count):
             if count[2] == '1':
                 spiderstatus = count[1]
             else:
-                room.removeRoom(dead_rat)
+                room.remove_room(dead_rat)
     else:
         ratFocus = False
-        room.removeRoom(rat)
-        room.addRoom(dead_rat)
+        room.remove_room(rat)
+        room.add_room(dead_rat)
         if spider in room.items:
-            spiderstatus = f"{SpiderName} carefully assesses their new kill."
+            spiderstatus = f"{SpiderName} carefully assesses their prey."
         else:
             monster_energy_gun.Description = [""""...
       ~2I understand that you have been through...a lot.
@@ -269,10 +269,11 @@ def rat_kill(count):
             monster_energy_gun.useDescription = ["~1Please stop.2&", None, "~1Please stop.2&"]
 
 
-def naming_ceremony(spiderName):
+def naming_ceremony(name):
     from game_objects import spider, dead_spider
     from main import player
-    global SpiderName
+    global SpiderName, spiderName
+    spiderName = name
     SpiderName = spiderName
     given_spider = spiderName.lower().rstrip()
     if given_spider in ['spider', 'the spider']:
@@ -287,9 +288,9 @@ def spider_friend():
     from util import yn
     global spiderName
     player.print('~2You seem to be growing an attachment to the spider.')
-    spiderName = input('What will you name them? ')
-    if spiderName:
-        naming_ceremony(spiderName)
+    name = input('What will you name them? ')
+    if name:
+        naming_ceremony(name)
         player.print(f"{spiderName} is scuttling about in excitement.2&")
     else:
         player.print(f"""Don't want to take away {spiderName}'s right to choose their own name I see?

@@ -17,7 +17,7 @@ def ease_to_dark():
 def matches_use(item, ls):
     if item.counter > 0:
         if yn("Blow out matchstick? (yep/nope) ") == 0:
-            item.stopTick()
+            item.stop_tick()
             item.lightEmit = False
             ease_to_dark()
     elif item.count == 0:
@@ -31,7 +31,7 @@ def matches_use(item, ls):
         else:
             item.print("You strike another match. The room is already bright enough to see because of the candle.")
         item.decrement()
-        item.startTick()
+        item.start_tick()
         item.lightEmit = True
 
 
@@ -46,7 +46,7 @@ def candle_use(item, ls):
         else:
             item.print('The fire returns to the candle, with the vigour of a starved traveller drinking from an oasis.')
         item.print("You blow out the match.")
-        matches.stopTick()
+        matches.stop_tick()
         matches.LightEmit = False
         item.lightEmit = True
     else:
@@ -173,9 +173,9 @@ def end_vending():
     from main import room
     if first['machine'] == 1:
         first['machine'] = 2
-        room.startTick()
+        room.start_tick()
     vending_machine.count = 2
-    room.addRoom(room_coin)
+    room.add_room(room_coin)
 
 
 def vending_use(item):
@@ -246,7 +246,7 @@ def vending_use(item):
         end_vending()
     else:
         item.print('You retrieve the gold coin from the money box.')
-        room.removeRoom(room_coin)
+        room.remove_room(room_coin)
         player.add_inv(coin)
         vending_machine.count = 0
 
@@ -261,8 +261,8 @@ def spider_kill(item):
     item.print(
         "~3Yes you monster, you horribly slaughter the innocent creature by pounding into it with your Energy Gun over "
         "and over until it stops twitching, are you happy now?")
-    room.removeRoom(item)
-    room.addRoom(dead_spider)
+    room.remove_room(item)
+    room.add_room(dead_spider)
     monster_energy_gun.Description = ["""...
   ~2You've..
   ~1...changed.2&""", None, """...

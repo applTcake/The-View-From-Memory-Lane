@@ -53,14 +53,14 @@ class Printer:
 
 
 class Tickable(Printer):
-    def __init__(self, tickActions):
+    def __init__(self, tick_actions):
         self.counter = 0
-        self.tickActions = tickActions
+        self.tickActions = tick_actions
 
-    def startTick(self):
+    def start_tick(self):
         self.counter = len(self.tickActions)
 
-    def stopTick(self):
+    def stop_tick(self):
         self.counter = 0
 
     def tick(self):
@@ -78,7 +78,7 @@ class Tickable(Printer):
             self.counter -= 1
 
 
-def multi(item, prompt, responses, tryAgain, originalResult, tuples):
+def multi(item, prompt, responses, try_again, original_result, tuples):
     ans = input(prompt)
     correct = None
     while True:
@@ -92,12 +92,12 @@ def multi(item, prompt, responses, tryAgain, originalResult, tuples):
                 if new in response:
                     correct = response
             if correct:
-                if originalResult:
+                if original_result:
                     return correct
                 else:
                     return responses.index(correct)
-        if tryAgain:
-            tryAgain(item, ans)
+        if try_again:
+            try_again(item, ans)
         ans = input(prompt)
 
 

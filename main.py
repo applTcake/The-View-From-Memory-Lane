@@ -66,7 +66,7 @@ class Player(Printer):
             self.lightingStatus = Lighting.DIM
         elif matches.lightEmit or matches.counter > 0:
             matches.lightEmit = False
-            matches.stopTick()
+            matches.stop_tick()
             change_of_light = True
         if candle.lightEmit:
             self.lightingStatus = Lighting.LIGHT
@@ -125,49 +125,49 @@ class Player(Printer):
         elif command == ActionType.INVALID:
             self.print("Invalid command. For controls, type 'help'.")
 
-    def use(self, room, itemName):
+    def use(self, room, item_name):
         allItems = room.items + player.inv
         for item in allItems:
-            if itemName in item.names:
+            if item_name in item.names:
                 item.use(self, room.get_lighting_status(self), room.get_uv_status(self))
                 return
         self.print("You don't have that right now.")
 
     def tickAll(self):
-        allItems = player.inv + room.items
-        for item in allItems:
+        all_items = player.inv + room.items
+        for item in all_items:
             if isinstance(item, Tickable):
                 item.tick()
 
 
 class Room(Tickable):
-    def __init__(self, light, dark, uv, lightingStatus, uvStatus, tickActions):
+    def __init__(self, light, dark, uv, lighting_status, uv_status, tick_actions):
         self.light = light
         self.dark = dark
         self.uv = uv
-        self.lightingStatus = lightingStatus
-        self.uvStatus = uvStatus
-        Tickable.__init__(self, tickActions)
+        self.lightingStatus = lighting_status
+        self.uvStatus = uv_status
+        Tickable.__init__(self, tick_actions)
 
-    def addRoom(self, item):
+    def add_room(self, item):
         room.items.append(item)
 
-    def removeRoom(self, item):
+    def remove_room(self, item):
         room.items.remove(item)
 
-    def getLightingStatus(self, player):
+    def get_lighting_status(self, player):
         return Lighting(
             max(self.lightingStatus.value, player.get_lighting_status().value)
         )
 
-    def getUvStatus(self, player):
+    def get_uv_status(self, player):
         return self.uvStatus or player.get_uv_status()
 
     def look(self, player):
         from game_objects import vending_machine
         from events import ratFocus
-        current_lighting_status = self.getLightingStatus(player)
-        current_uv_status = self.getUvStatus(player)
+        current_lighting_status = self.get_lighting_status(player)
+        current_uv_status = self.get_uv_status(player)
         if ratFocus:
             if current_lighting_status == Lighting.DARK:
                 self.print(self.dark)
@@ -193,7 +193,7 @@ class Room(Tickable):
         all_items = player.inv + room.items
         for item in all_items:
             if item_name in item.names:
-                item.describe(self.getLightingStatus(player), self.getUvStatus(player))
+                item.describe(self.get_lighting_status(player), self.get_uv_status(player))
                 break
         else:
             self.print("You currently see no such item in your vicinity.")

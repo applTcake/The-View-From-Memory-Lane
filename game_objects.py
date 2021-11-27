@@ -135,7 +135,7 @@ def vending_aha(item, ls):
     if first['machine'] == 2:
         item.print("~4Oh, right, I almost forgot.2&")
         first['machine'] = 3
-        room.addRoom(money_box)
+        room.add_room(money_box)
     if first['machine'] == 3:
         money_box_status(item)
 
@@ -288,7 +288,7 @@ def matches_burnt():
     from main import player
     player.print("""The flame of the match travels down the stick, nearly burning your fingers.
   You instinctively drop the matchstick onto the ground and stamp it out with your foot.""")
-    matches.stopTick()
+    matches.stop_tick()
     player.get_lighting_status()
 
 
