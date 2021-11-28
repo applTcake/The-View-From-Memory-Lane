@@ -77,12 +77,37 @@ def torch_use(item, ls):
     torch.lightEmit = not torch.lightEmit
 
 
-news = [['DADADADADA', 'Someone went missing..', 'SECRET MESSAGE!!!'],
-        ['MISSING PERSONS', 'see previous article', "GAHAHA THIS WAS MY EVIL PLAN ALL ALONG!!"],
-        ['SPORTS NEWS',
-         """REMEMBER: THE CODE IS...
-      psyche! not gonna tell you! <333""",
-         "double psyche >:)"]]
+news = [['DADADADADA',
+         'Someone went missing..guess who took them (us. yes, this dodgy newspaper company is the one behind this dodgy case.)',
+         'SECRET MESSAGE!!!'],
+        ['MISSING PERSONS', """see previous article.
+        yeah so someone really important went missing. if you give us candy we will tell where they are/return them to you.""",
+         "GAHAHA THIS WAS MY EVIL PLAN ALL ALONG!!"],
+        ['SPORTS NEWS - February 16th',
+         """"~2..Today is a bad day.
+         ~2There isn't any news to suggest that as such.
+         ~2I've just got this feeling, you know?
+         ~2Something terrible is going down.
+         ~2Wish I knew what it was.
+         ~2If only someone could shed some light on it...
+         ~3 - the Editor""",
+         """<starts reading>
+         
+         ~5Why did you stop? Come on, keep reading.
+         
+         ~2<continues reading>
+         
+         ~3...
+         ~2Look I know you're upset, but you've got to think...
+         ~3You haven't learned anything.
+         ~2You haven't even tried.
+         ~2And you can't even utter a single thank you for all the effort I've put into this project for you, huh.
+         ~5And no, I'm not angry at you.
+         ~~~1.5But I'm not sorry for you either.
+         ~2Just...I wish you'd say something.
+         ~5By all means, please, enjoy being in denial for a couple years more.
+         ~3Hell, I could turn off this torch for you right now."""
+         ]]
 
 
 def news_flip(item, ls):
@@ -206,7 +231,7 @@ def vending_use(item, ls):
                              (['001', '01', '1'], ['002', '02', '2'], ['003', '03', '3'],
                               ['004', '04', '4'], ['005', '05', '5'], ['006', '06', '6'],
                               ['007', '07', '7'], ['008', '08', '8'], ['009', '09', '9'],
-                              ['333'],
+                              ['216'],
                               back), keypad_nope, False, False))
             if code == 10:
                 return
@@ -285,7 +310,7 @@ def spider_use(item, ls):
     from game_objects import monster_energy_gun, snack9, dead_rat, spider
     from main import player, room
     from events import spiderName, SpiderName
-    global bnc
+    global bnc, spiderstatus
     if room.tickActions == ratHunt_Tick:
         item.print('{S} is a bit preoccupied at the moment.'.format(S=SpiderName))
         return
@@ -369,11 +394,11 @@ def spider_use(item, ls):
         item.print("""You command {s} to dance.
     ~2They begin to dance...2&""".format(s=spiderName))
         if bnc:
-            #      playsound('little_lad_dance.mp3')
+            # playsound('little_lad_dance.mp3')
             spiderstatus = '{S} is doing the Little Lad Dance :))'
             bnc = False
         else:
-            #      playsound('spider_dance.mp3')
+            # playsound('spider_dance.mp3')
             spiderstatus = 'The arachnid sways erratically to the non-diegetic music.'
     elif ans == 4:
         if first['spider'] < 5:

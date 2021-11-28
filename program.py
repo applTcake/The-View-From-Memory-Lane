@@ -1,10 +1,8 @@
 from main import player, room, end_game
 from events import *
 
-# start_game()
-# intro()
-default_spider()
-spider_friend()
+#start_game()
+#intro()
 # room.startTick()
 while not end_game:
     room.tick()

@@ -187,6 +187,12 @@ dead_spider = Item(['smear', 'spider', 'stain'],
 money_box = Item(['money box', 'coin box'],
                  [money_box_status], [vending_use])
 
+project = Item(['project'],
+               [""""...
+               ~1You'll be fine.
+               ~2I promise.2&"""],
+               ["""Please, feel free to investigate anything.
+               ~2I made it just for you :)1&"""])
 
 def rat_poem(item, ls):
     if first['rat'] == 0:

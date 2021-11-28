@@ -5,7 +5,7 @@ from events import *
 
 
 class Printer:
-    screenWidth = 80
+    screenWidth = 100
 
     def print(self, text):
         sleep_time1 = 0
