@@ -78,19 +78,22 @@ def torch_use(item, ls):
 
 
 news = [['DADADADADA',
-         'Someone went missing..guess who took them (us. yes, this dodgy newspaper company is the one behind this dodgy case.)',
-         'SECRET MESSAGE!!!'],
+         'Someone went missing..guess who took them.',
+         'Someone went missing..guess who took them. (us. yes, this dodgy newspaper company is the one behind this dodgy case.)'],
         ['MISSING PERSONS', """see previous article.
-        yeah so someone really important went missing. if you give us candy we will tell where they are/return them to you.""",
-         "GAHAHA THIS WAS MY EVIL PLAN ALL ALONG!!"],
-        ['SPORTS NEWS - February 16th',
-         """"~2..Today is a bad day.
-         ~2There isn't any news to suggest that as such.
-         ~2I've just got this feeling, you know?
-         ~2Something terrible is going down.
+        yeah so someone really important went missing.""",
+         "someone really important went missing. (if you ship us 10000kg of candy to our headquarters we will tell you"
+         " where they are/return them to you if we're feeling generous.)"],
+        ['FEBRUARY 16th - Some random snippet from an interview transcript',
+         """~2Today is a bad day.
+         ~2There isn't any news to suggest that as such. In fact, it's more peaceful than usual.
+         ~4But I've just got this feeling, you know?
+         ~3Something terrible is going down.
          ~2Wish I knew what it was.
-         ~2If only someone could shed some light on it...
-         ~3 - the Editor""",
+         ~3Hang on, who turned off the lights?
+         ~~~1.5Could someone please turn on the lights?
+         ~~~1.5Is this some kind of sick joke?
+         ~~~1.5Hello???""",
          """<starts reading>
          
          ~5Why did you stop? Come on, keep reading.
@@ -277,7 +280,8 @@ def vending_use(item, ls):
 
 
 def spider_use_again(item, ans):
-    item.print("I don't understand what you want.")
+    from events import SpiderName
+    item.print("{S} doesn't understand what you want.".format(S=SpiderName))
 
 
 def spider_kill(item):

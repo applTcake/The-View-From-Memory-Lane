@@ -49,11 +49,12 @@ def keypad_glow(item, ls):
 
 
 def keypad_glow_use(item, ls):
+    from main import player, room
     if vending_machine.count == 1:
         item.print("The glow of the keypad isn't quite bright enough for you to operate the machine.")
     elif item == coin:
         item.print(needLight)
-    else:
+    elif not room.get_uv_status(player):
         item.print(Rummage)
 
 
@@ -188,7 +189,7 @@ money_box = Item(['money box', 'coin box'],
                  [money_box_status], [vending_use])
 
 project = Item(['project'],
-               [""""...
+               ["""...
                ~1You'll be fine.
                ~2I promise.2&"""],
                ["""Please, feel free to investigate anything.
