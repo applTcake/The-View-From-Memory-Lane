@@ -282,13 +282,14 @@ def theyit(string, plus):
 
 
 def spider_use(item, ls):
-    global bnc, spiderName
     from game_objects import monster_energy_gun, snack9, dead_rat, spider
     from main import player, room
+    from events import spiderName, SpiderName
+    global bnc
     if room.tickActions == ratHunt_Tick:
-        item.print('{SpiderName} is a bit preoccupied at the moment.')
+        item.print('{S} is a bit preoccupied at the moment.'.format(S=SpiderName))
         return
-    ans = multi(item, "What would you like to do with {spiderName}? ",
+    ans = multi(item, "What would you like to do with {s}? ".format(s=spiderName),
                 ([('b', 'back', 'return', 'escape'), theyit('leave', None)],
                  [('fire', 'gun', 'fire gun', 'fire my gun')],
                  [theyit('feed', None)],
@@ -351,8 +352,8 @@ def spider_use(item, ls):
         for item in all_items:
             if feed in item.names:
                 if feed in snack9.names:
-                    item.print("""You feed {spiderName} a packet of Berries and Cream.
-                     ~2If you prompt them enough, they might just break into a dance.2&""")
+                    item.print("""You feed {s} a packet of Berries and Cream.
+                     ~2If you prompt them enough, they might just break into a dance.2&""".format(s=spiderName))
                     bnc = True
                     return
                 if feed in dead_rat.names:
@@ -365,11 +366,11 @@ def spider_use(item, ls):
                 return
         item.print("You don't have that with you.")
     elif ans == 3:
-        item.print("""You command {spiderName} to dance.
-    ~2They begin to dance...2&""")
+        item.print("""You command {s} to dance.
+    ~2They begin to dance...2&""".format(s=spiderName))
         if bnc:
             #      playsound('little_lad_dance.mp3')
-            spiderstatus = '{SpiderName} is doing the Little Lad Dance :))'
+            spiderstatus = '{S} is doing the Little Lad Dance :))'
             bnc = False
         else:
             #      playsound('spider_dance.mp3')
@@ -378,33 +379,40 @@ def spider_use(item, ls):
         if first['spider'] < 5:
             item.print("Not yet. You need to get to know them better first :)")
         else:
-            spiderName = input("What would you like to name them? ")
+            name = input("What would you like to name them? ")
             spider.names = ['spider']
-            if spiderName:
-                naming_ceremony(spiderName)
-                item.print("The spider will now be referred to as {spiderName} :DD")
+            if name:
+                naming_ceremony(name)
+                if name == spiderName:
+                    item.print("{S} will continue to be referred to as {s}.".format(s=spiderName, S=SpiderName))
+                else:
+                    item.print("{S} will now be referred to as ".format(S=SpiderName) + name + ".")
             else:
-                item.print("The spider will simply be referred to as a 'spider' from now on.")
+                if SpiderName != spiderName:
+                    item.print("{S} will continue to be referred simply as '{s}'.".format(s=spiderName, S=SpiderName))
+                else:
+                    item.print("{S} will simply be referred to as 'the spider' from now on.".format(S=SpiderName))
+                default_spider()
 
     else:
         spider_response = ['', '', '', '', '',
                            """No need to be afraid!
     ~1They're just a spider after all...1&""",
                            ':)',
-                           """You exchange a knowing glance with {spiderName}.
+                           """You exchange a knowing glance with {s}.
     ~2swag.1&""",
-                           """You pet {spiderName}.
+                           """You pet {s}.
     ~2Fluffy. It gives you an oddly comforting shiver down your spine.""",
-                           """You poke {spiderName}.
+                           """You poke {s}.
     ~2somft.1&""",
-                           """You hold {spiderName} like a borger.
+                           """You hold {s} like a borger.
     They wriggle in your grasp.""",
-                           """You hug {spiderName}.
-    ~2{SpiderName} is stunned. They look up at you inquisitively.""",
-                           """You tickle {spiderName}.
-    ~2{SpiderName} isn't impressed.""",
+                           """You hug {s}.
+    ~2{S} is stunned. They look up at you inquisitively.""",
+                           """You tickle {s}.
+    ~2{S} isn't impressed.""",
                            "~1You wonder, do spiders blush?1&",
-                           """You give {spiderName} a heartfelt kiss.
+                           """You give {s} a heartfelt kiss.
     ~2Aww <33""",
                            "As much as that is adorable, this is not a dating sim.",
                            """~2Y'know.
@@ -425,8 +433,8 @@ def spider_use(item, ls):
     ~2Because it's as though the storm never really happened.
     ~3Still, the question remains:
     ~3Will the itsy-bitsy spider climb up the spout again?3&""",
-                           """"You show off to {spiderName} with your well-practised disappearing thumb trick.
-    ~3{spiderName}'s eyes visibly widen as they try to comprehend this phenomenon.2&""",
+                           """You show off to {s} with your well-practised disappearing thumb trick.
+    ~3{S}'s eyes visibly widen as they try to comprehend this phenomenon.2&""",
                            """~~~0.5I..um...
     ~1Please do not eat the spider.
     ~1There's literally a snack machine in front of you
@@ -448,7 +456,7 @@ def spider_use(item, ls):
                            """Gahh!!!
     ~1Stop making loud noises like that! >:(1&"""
                            ]
-        item.print(spider_response[ans])
+        item.print(spider_response[ans].format(s=spiderName, S=SpiderName))
     return
 
 

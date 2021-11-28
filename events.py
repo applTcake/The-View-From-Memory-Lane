@@ -4,10 +4,12 @@ from statuseffects import *
 
 first = {'match': True, 'candle': True, 'coin': 0, 'machine': 0,
          'snack': True, 'spider': 0, 'torch': True, 'rat': 0, 'uv_news': True}
-spiderName, SpiderName = 'the spider', 'The spider'
-spiderstatus = '{SpiderName} scuttles around on top of the vending machine, disorientedly.'
+spiderstatus = '{S} scuttles around on top of the vending machine, disorientedly.'
 ratFocus = False
 
+def default_spider():
+    global spiderName, SpiderName
+    spiderName, SpiderName = 'the spider', 'The spider'
 
 def start_game():
     from util import Printer, yn
@@ -50,10 +52,8 @@ def intro():
 
 
 def events():
-    from game_objects import spider
+    from game_objects import spider, spider_status
     from main import player, room
-    global spiderstatus
-    print(SpiderName, spiderName)
     if room.counter == 0:
         room.stop_tick()
     if first['spider'] == 1 and player.get_lighting_status() != Lighting.DARK:
@@ -63,7 +63,7 @@ def events():
     elif first['spider'] == 2:
         first['spider'] = 3
     elif first['spider'] == 3:
-        player.print(spiderstatus)
+        spider_status(spider, player.get_lighting_status())
         first['spider'] = 4
     if room.tickActions == spider1_Tick and room.counter == 0 and not first['torch']:
         room.tickActions = rat_Tick
@@ -89,35 +89,35 @@ spider1_Tick = [
     None, None, None,
     'spider_tense/',
     None, None,
-    "spider_tense/{SpiderName} deftly climbs down the vending machine. Their limbs are moving rapidly./"
+    "spider_tense/{S} deftly climbs down the vending machine. Their limbs are moving rapidly./"
     "~~~1.5Tink tink tink",
     None, None, None,
-    "spider_tense/{SpiderName} has successfully climbed down the vending machine./~~~1.5stook.",
+    "spider_tense/{S} has successfully climbed down the vending machine./~~~1.5stook.",
     None, None, None,
-    "spider_tense/{SpiderName} is stalking across the newspapers./~2flip flip...  flitflitflit.",
+    "spider_tense/{S} is stalking across the newspapers./~2flip flip...  flitflitflit.",
     None, None, None,
-    "spider_tense/{SpiderName} approaches you./~2Something furry brushes past your hand."
+    "spider_tense/{S} approaches you./~2Something furry brushes past your hand."
 ]
 
 
 def spider_tense(count):
-    from game_objects import spider
+    from game_objects import spider, spider_status
     from main import player, room
     global spiderstatus
-    light_status = player.get_lighting_status()
+    ls = player.get_lighting_status()
     if len(count) == 3:
         spiderstatus = count[1]
         oblivious = count[2]
-        if light_status == Lighting.DARK and (
+        if ls == Lighting.DARK and (
                 oblivious == "~2Something furry brushes past your hand." or spider not in room.items):
             player.print(oblivious)
         elif spider in room.items:
-            player.print(spiderstatus)
+            spider_status(spider, ls)
             if first['spider'] == 2:
                 first['spider'] = 3
     else:
         first['spider'] = 1
-        if light_status == Lighting.DARK:
+        if ls == Lighting.DARK:
             player.print('~1Clink1&')
         else:
             player.print('~2A large furry spider emerges on top of the vending machine!!')
@@ -188,7 +188,7 @@ rat_Tick = [
 ]
 
 ratHunt_Tick = [
-    """ratKill/{SpiderName} pounces on the rat!!
+    """ratKill/{S} pounces on the rat!!
   ~2With one swift movement, they sink their fangs into the rat's saggy neck.
   ~4The rat squirms in silent defiance for a few seconds, before its body goes slack.
   ~4Eyes glazed over.
@@ -196,7 +196,7 @@ ratHunt_Tick = [
   ~2...
   ~2You love spiders.2&""",
     None, None,
-    "rat_kill/{SpiderName} is dragging the rat's limp body away./1",
+    "rat_kill/{S} is dragging the rat's limp body away./1",
     None, None, None,
     "rat_kill/The rat has been dragged out of view./2",
     None, None, None
@@ -220,10 +220,10 @@ ratAttack_Tick = [
 
 
 def rat_tense(count):
-    from game_objects import rat, spider
+    from game_objects import rat, spider, spider_status
     from main import player, room
     global ratFocus
-    print(spiderstatus)
+    spider_status(spider, player.get_lighting_status())
     if len(count) == 3:
         if spider in room.items:
             player.print(count[1])
@@ -244,7 +244,7 @@ def rat_kill(count):
     from game_objects import dead_rat, rat, spider, monster_energy_gun
     from main import player, room
     global ratFocus, spiderstatus
-    player.print(count[1])
+    player.print(count[1].format(S=SpiderName))
     if len(count) == 3:
         if spider in room.items:
             if count[2] == '1':
@@ -256,7 +256,7 @@ def rat_kill(count):
         room.remove_room(rat)
         room.add_room(dead_rat)
         if spider in room.items:
-            spiderstatus = "{SpiderName} carefully assesses their prey."
+            spiderstatus = "{S} carefully assesses their meal."
         else:
             monster_energy_gun.Description = [""""...
       ~2I understand that you have been through...a lot.
@@ -287,25 +287,24 @@ def naming_ceremony(name):
 def spider_friend():
     from main import player
     from util import yn
-    global spiderName
     player.print('~2You seem to be growing an attachment to the spider.')
     name = input('What will you name them? ')
     if name:
         naming_ceremony(name)
-        player.print("{SpiderName} is scuttling about in excitement.2&")
+        player.print("{S} is scuttling about in excitement.2&".format(S=SpiderName))
     else:
-        player.print("""Don't want to take away {spiderName}'s right to choose their own name I see?
-    ~3{SpiderName} appears pleased with your humanitarian ways.2&""")
+        player.print("""Don't want to take away {s}'s right to choose their own name I see?
+    ~3{S} appears pleased with your humanitarian ways.2&""".format(S=SpiderName, s=spiderName))
     player.print('They advance towards your hand, staring up at you with a hungry, fervent gaze.5&')
-    if yn('Let {spiderName} onto your palm? (yessir/nah bruv) ') == 0:
-        player.print("""{SpiderName} steps gingerly onto your right hand with their angular legs.
+    if yn('Let {s} onto your palm? (yessir/nah bruv) '.format(s=spiderName)) == 0:
+        player.print("""{S} steps gingerly onto your right hand with their angular legs.
     ~3First your middle finger, then your pinky, skittering towards the creases of your palm.
     ~4Then, slowly and tenderly, they sink their fangs into your wrist.
     ~6It tickles.
     ~3...
     ~3... huh.
-    ~3It's been such an awfully long time since you've have physical contact with anyone...4&""")
+    ~3It's been such an awfully long time since you've have physical contact with anyone...4&""".format(S=SpiderName))
     else:
-        player.print('{SpiderName} respects your personal space.2&')
+        player.print('{S} respects your personal space.2&'.format(S=SpiderName))
     player.print('Right. Back to work.')
     first['spider'] = 5

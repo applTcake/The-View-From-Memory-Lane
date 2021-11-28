@@ -233,14 +233,15 @@ room_coin = Item(
 
 
 def spider_status(item, ls):
-    from events import spiderstatus
-    item.print(spiderstatus)
+    from events import spiderstatus, spiderName, SpiderName
+    item.print(spiderstatus.format(S=SpiderName, s=spiderName))
 
 
 def spider_describe(item, ls):
+    from events import SpiderName
     spider_status(item, ls)
-    item.print("""{SpiderName} is hairy with huge protruding legs.
-  A huntsman perhaps?""")
+    item.print("""{S} is hairy with huge protruding legs.
+  A huntsman perhaps?""".format(S=SpiderName))
     if ls == Lighting.LIGHT:
         item.print("You also think they're a huntsman because of the lack of cobwebs around.")
 
