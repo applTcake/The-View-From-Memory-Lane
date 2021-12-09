@@ -8,9 +8,11 @@ spiderstatus = '{S} scuttles around on top of the vending machine, disorientedly
 ratFocus = False
 spiderName, SpiderName = 'the spider', 'The spider'
 
+
 def default_spider():
     global spiderName, SpiderName
     spiderName, SpiderName = 'the spider', 'The spider'
+
 
 def start_game():
     from util import Printer, yn
@@ -36,13 +38,24 @@ def intro():
     from util import Printer
     for i in range(5):
         player.print('_0.2&&&')
-    player.print("""It's quiet in here.
-  ~2So quiet.
-  ~2hehehe
-  ~2ahahahahaha...
-  ~4And as much as i'd like for it to stay that way...
-  ~2
-  IT'S TIME FOR YOU TO WAKE UP2&""")
+    player.print("""Are you quite dead yet?
+    ~2Cause it's so quiet in here.
+    ~2You haven't had a new thought in years.
+    ~3...
+    ~2it's not so bad, i admit.
+    ~2but do you really think it will end that easily?
+    ~4hehehe
+    ~2ahahahahaha..
+    ~2
+    IT'S TIME FOR YOU TO WAKE UP3&""")
+
+   # """It's quite in here.
+   # ~2So quiet.
+   # ~2hehehe
+   # ~2ahahahahaha...
+   # ~4And as much as i'd like for it to stay that way...
+   # ~2
+   # IT'S TIME FOR YOU TO WAKE UP2&"""
     for i in range(30):
         player.print('_' * Printer.screenWidth + '0.1&&&')
     player.print("""~2huh
@@ -189,7 +202,7 @@ rat_Tick = [
 ]
 
 ratHunt_Tick = [
-    """ratKill/{S} pounces on the rat!!
+    """rat_kill/{S} pounces on the rat!!
   ~2With one swift movement, they sink their fangs into the rat's saggy neck.
   ~4The rat squirms in silent defiance for a few seconds, before its body goes slack.
   ~4Eyes glazed over.
@@ -221,10 +234,9 @@ ratAttack_Tick = [
 
 
 def rat_tense(count):
-    from game_objects import rat, spider, spider_status
+    from game_objects import rat, spider
     from main import player, room
     global ratFocus
-    spider_status(spider, player.get_lighting_status())
     if len(count) == 3:
         if spider in room.items:
             player.print(count[1])

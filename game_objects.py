@@ -65,9 +65,8 @@ coin_slot = Item(['coin slot'],
 
 display_case = Item(
     ['display case', 'display chamber', 'glass display chamber', 'case', 'glass case', 'glass display case'],
-    [
-        "The glass display case has caught a lot of dust over the years, though you can just make out the gaudy "
-        "packages of the snacks within."],
+    ["The glass display case has caught a lot of dust over the years, though you can just make out the gaudy "
+     "packages of the snacks within."],
     ["""You can't open/break/pry the case in any way.
   Oh, what terrible service!
   ~4Guess you'll have to access its contents via the conveniently-provided coin slot and keypad instead.4&"""])
@@ -194,6 +193,7 @@ project = Item(['project'],
                ~2I promise.2&"""],
                ["""Please, feel free to investigate anything.
                ~2I made it just for you :)1&"""])
+
 
 def rat_poem(item, ls):
     if first['rat'] == 0:

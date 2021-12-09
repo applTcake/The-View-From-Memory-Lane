@@ -20,10 +20,10 @@ def pass_descriptions(item, description, light_status, uv, dark_error, uv_error)
     elif light_status == Lighting.DARK:
         if len(description) > 1 and description[0]:
             display_item(item, description[0], light_status)
-        elif not uv:
-            item.print(dark_error)
         if uv and uv_error and item not in [rat, torch]:
             item.print(uv_error)
+        else:
+            item.print(dark_error)
     elif len(description) >= 3:
         if light_status == Lighting.DIM and description[1]:
             display_item(item, description[1], light_status)
