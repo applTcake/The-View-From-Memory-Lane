@@ -2,7 +2,7 @@ from util import *
 from statuseffects import *
 # from playsound import playsound
 
-first = {'match': True, 'candle': True, 'coin': 0, 'machine': 0,
+first = {'match': False, 'candle': False, 'coin': 0, 'machine': 0,
          'snack': True, 'spider': 0, 'torch': True, 'rat': 0, 'uv_news': True}
 spiderstatus = '{S} scuttles around on top of the vending machine, disorientedly.'
 ratFocus = False
