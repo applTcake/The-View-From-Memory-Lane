@@ -1,8 +1,9 @@
 from util import *
 from statuseffects import *
+
 # from playsound import playsound
 
-first = {'match': False, 'candle': False, 'coin': 0, 'machine': 0,
+first = {'match': True, 'candle': True, 'coin': 0, 'machine': 0,
          'snack': True, 'spider': 0, 'torch': True, 'rat': 0, 'uv_news': True}
 spiderstatus = '{S} scuttles around on top of the vending machine, disorientedly.'
 ratFocus = False
@@ -49,13 +50,13 @@ def intro():
     ~2
     IT'S TIME FOR YOU TO WAKE UP3&""")
 
-   # """It's quite in here.
-   # ~2So quiet.
-   # ~2hehehe
-   # ~2ahahahahaha...
-   # ~4And as much as i'd like for it to stay that way...
-   # ~2
-   # IT'S TIME FOR YOU TO WAKE UP2&"""
+    # """It's quite in here.
+    # ~2So quiet.
+    # ~2hehehe
+    # ~2ahahahahaha...
+    # ~4And as much as i'd like for it to stay that way...
+    # ~2
+    # IT'S TIME FOR YOU TO WAKE UP2&"""
     for i in range(30):
         player.print('_' * Printer.screenWidth + '0.1&&&')
     player.print("""~2huh

@@ -8,13 +8,17 @@ notStanding = "You don't feel like standing up."
 meDescribe = """~1uh
   ~1yes
   ~~~1.5that's certainly you :)2&"""
+earTwitch = ''.join(random.choices(["You can't move your ears.", "You wiggle your ears with ease."], [0.8, 0.2]))
+
+
+def same2(phrase):
+    return [phrase, None, phrase]
+
 
 # Room Items
 arms = Item(
     ['hands', 'hand', 'arm', 'arms', 'fingers', 'finger'],
-    [meDescribe, None, meDescribe],
-    ['What would you like to use them for?', None,
-     'What would you like to use them for?'])
+    same2(meDescribe), same2('What would you like to interact with?'))
 
 
 def bright_candle(item, ls):
@@ -37,8 +41,7 @@ chair = Item(['chair', 'seat', 'armchair', 'wooden chair', 'wooden seat', 'woode
               """It's a slightly cramped but comfy wooden armchair, complete with a tattered burlap cushion.
   ~4It has a colourful hand-knitted back, consisting of midnight blues, autumn greens, sunset pinks...
   ~6...
-  ~2You remember making this chair.2&"""],
-             [notStanding, None, notStanding])
+  ~2You remember making this chair.2&"""], same2(notStanding))
 
 
 def keypad_glow(item, ls):
@@ -71,22 +74,43 @@ display_case = Item(
   Oh, what terrible service!
   ~4Guess you'll have to access its contents via the conveniently-provided coin slot and keypad instead.4&"""])
 
+ears = Item(['ear', 'ears'], same2(meDescribe), same2(earTwitch))
+
+
+def gaze(item, ls):
+    from main import room, player
+    room.look(room, player)
+
+
+eyes = Item(['eye', 'eyes'], same2(gaze), same2(gaze))
+
+head = Item(['head'], same2(meDescribe), same2('You prepare yourself for the deeds you must do.'))
+
 keypad = Item(['keypad', 'keyboard'],
               [keypad_glow, "It's a set of buttons for using the vending machine.",
                "It's a set of buttons from 0 to 9, including a 'Clear' button and an 'Enter' button."],
               [keypad_glow_use, None, vending_use])
 
 legs = Item(
-    ['leg', 'legs', 'foot', 'feet', 'toe', 'toes'],
-    [meDescribe, None, meDescribe],
-    [notStanding, None, notStanding])
+    ['leg', 'legs', 'foot', 'feet', 'knees', 'toe', 'toes', 'body'], same2(meDescribe), same2(notStanding))
 
 me = Item(
-    ['me', 'self', 'myself', 'face', 'eyes', 'nose', 'mouth', 'ears', 'body', 'head', 'shoulders', 'knees'],
-    [meDescribe, None, meDescribe],
-    ["""???
-  ~1You aren't making any sense.1&""", None, """???
-  ~1You aren't making any sense.1&"""])
+    ['me', 'self', 'myself', 'face', 'shoulders'], same2(meDescribe),
+    same2("""???
+  ~1You aren't making any sense.1&"""))
+
+
+def chat(item, ls):
+    from main import room
+    if spider in room.items:
+        item.print('You try talk to the spider.2&')
+        item.print(spiderStory)
+    else:
+        item.print('You have a nice conversation with yourself.2&')
+
+
+mouth = Item(
+    ['mouth'], same2(meDescribe), same2(chat))
 
 
 def light_room_news(item, ls):
@@ -101,9 +125,14 @@ newspaper_article = ItemRoomStack(
     ["There is a stack of papers on one side of the table. Newspapers, perhaps.", light_room_news],
     [None, None, news_flip, news_flip], [None, None, news_flip, news_flip], 0)
 
+nose = Item(
+    ['nose'], same2(meDescribe),
+    ["You don't particularly smell anything.", None,
+     "The scent from the candle almost makes you tear up."])
+
 snack = Item(
     ['snack', 'snacks', 'treat', 'treats', 'junk food', 'junk food'],
-    [snack_describe, None, snack_describe], [snack_use, None, snack_use])
+    same2(snack_describe), same2(snack_use))
 
 table = Item(
     ['table', 'wooden table'],
@@ -148,20 +177,13 @@ vending_machine = ItemRoomStack(
 
 you = Item(
     ['you', 'us'],
-    ["""~1...
+    same2("""~1...
   ~2um
   ~2you aren't supposed to do that.
   ~2that would be breaking the fourth wall.
-  ~2remember?2&""", None,
-     """~1...
-  ~2um
-  ~2you aren't supposed to do that.
-  ~2that would be breaking the fourth wall.
-  ~2remember?2&"""],
-    ["""???
-  ~1For what purpose?1&""", None,
-     """???
-  ~1For what purpose?1&"""])
+  ~2remember?2&"""),
+    same2("""???
+  ~1For what purpose?1&"""))
 
 # Hidden Room Items
 dead_rat = Item(
@@ -230,13 +252,11 @@ def rat_poem(item, ls):
 
 rat = Item(
     ['rat', 'ratthew'],
-    [rat_poem, None, rat_poem], [])
+    same2(rat_poem), [])
 
 room_coin = Item(
     ['coin', 'gold coin'],
-    ["You'll need to take it out of the vending machine first.", None,
-     "You'll need to take it out of the vending machine first."],
-    [vending_use])
+    same2("You'll need to take it out of the vending machine first."), [vending_use])
 
 
 def spider_status(item, ls):
@@ -303,7 +323,7 @@ def matches_burnt():
 matches = InvMatches(
     ['matches', 'matchbox', 'match', 'matchstick', 'matchsticks'],
     [matches_description_dark, None, matches_description_light],
-    [matches_use, None, matches_use], 47, False, [None, None, None, matches_burnt])
+    same2(matches_use), 47, False, [None, None, None, matches_burnt])
 
 # Hidden Inventory Items
 coin = Item(
@@ -316,15 +336,14 @@ empty_can = InvStack(
     ['empty can', 'can', 'monster can', 'monster energy can'],
     ["The can is significantly lighter than before. Its cylindrical surface cools your palm.", None,
      "It's a can with three claw marks dug onto its side. It's empty, but otherwise intact."],
-    [can_use, None, can_use], 0)
+    same2(can_use), 0)
 
 monster_energy_gun = Item(
     ['Monster Energy Gun', 'monster energy gun', 'gun', 'monster gun', 'energy gun'],
     ["Makeshift rifle swaggg-", None,
      """Swaggy gun you've got there. It looks exactly like one of those you might see on tiktok :DD
   Consisting of 7 Monster Energy cans, this is one of your best crafts yet!"""],
-    ["~2I recommend you don't go swinging that thing around.", None,
-     "~2I recommend you don't go swinging that thing around."])
+    same2("~2I recommend you don't go swinging that thing around."))
 
 
 def torch_describe(item, ls):
@@ -346,7 +365,7 @@ def torch_describe(item, ls):
 torch = InvTorch(
     ['torch', 'mini-torch', 'mini torch', 'flashlight', 'uv', 'uv light', 'uv torch', 'uv mini torch', 'uv mini-torch',
      'uv flashlight'],
-    [torch_describe, None, torch_describe], [torch_use, None, torch_use], False)
+    same2(torch_describe), same2(torch_use), False)
 
 
 # Snacks

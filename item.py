@@ -15,14 +15,16 @@ def display_item(item, action, ls):
 
 def pass_descriptions(item, description, light_status, uv, dark_error, uv_error):
     from game_objects import rat, torch
+    described = False
     if len(description) >= 4 and light_status == Lighting.DARK and uv:
         display_item(item, description[3], light_status)
     elif light_status == Lighting.DARK:
         if len(description) > 1 and description[0]:
             display_item(item, description[0], light_status)
+            described = True
         if uv and uv_error and item not in [rat, torch]:
             item.print(uv_error)
-        else:
+        elif not described:
             item.print(dark_error)
     elif len(description) >= 3:
         if light_status == Lighting.DIM and description[1]:
