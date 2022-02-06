@@ -18,7 +18,7 @@ def same2(phrase):
 # Room Items
 arms = Item(
     ['hands', 'hand', 'arm', 'arms', 'fingers', 'finger'],
-    same2(meDescribe), same2('What would you like to interact with?'))
+    [meDescribe], same2('What would you like to interact with?'))
 
 
 def bright_candle(item, ls):
@@ -77,12 +77,15 @@ display_case = Item(
 ears = Item(['ear', 'ears'], same2(meDescribe), same2(earTwitch))
 
 
-def gaze(item, ls):
-    from main import room, player
-    room.look(room, player)
+def make_face(item, ls):
+    from main import room
+    if spider in room.items:
+        item.print(spiderFace)
+    else:
+        item.print('You pull some faces in an attempt to entertain yourself.')
 
 
-eyes = Item(['eye', 'eyes'], same2(gaze), same2(gaze))
+face = Item(['face'], same2(meDescribe), same2(make_face))
 
 head = Item(['head'], same2(meDescribe), same2('You prepare yourself for the deeds you must do.'))
 
@@ -91,26 +94,26 @@ keypad = Item(['keypad', 'keyboard'],
                "It's a set of buttons from 0 to 9, including a 'Clear' button and an 'Enter' button."],
               [keypad_glow_use, None, vending_use])
 
-legs = Item(
-    ['leg', 'legs', 'foot', 'feet', 'knees', 'toe', 'toes', 'body'], same2(meDescribe), same2(notStanding))
+legs = Item(['leg', 'legs', 'foot', 'feet', 'knees', 'toe', 'toes', 'body'], [meDescribe], same2(notStanding))
 
 me = Item(
-    ['me', 'self', 'myself', 'face', 'shoulders'], same2(meDescribe),
+    ['me', 'self', 'myself'], same2(meDescribe),
     same2("""???
   ~1You aren't making any sense.1&"""))
+
+mescellaneous = Item(['shoulders'], [meDescribe], same2("For what?"))
 
 
 def chat(item, ls):
     from main import room
     if spider in room.items:
-        item.print('You try talk to the spider.2&')
+        item.print('You try talking to the spider.2&')
         item.print(spiderStory)
     else:
         item.print('You have a nice conversation with yourself.2&')
 
 
-mouth = Item(
-    ['mouth'], same2(meDescribe), same2(chat))
+mouth = Item(['mouth'], same2(meDescribe), same2(chat))
 
 
 def light_room_news(item, ls):

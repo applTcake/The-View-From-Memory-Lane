@@ -31,7 +31,7 @@ class CommandParser(Printer):
             argument = ''
 
         if action_name in ['l', 'look', 'examine', 'e', 'inspect', 'observe'] and argument in ['around', 'surroundings',
-                                                                                               'room', '']:
+                                                                                               'room', 'eye', 'eyes', '']:
             action = ActionType.LOOK_ROOM
         elif action_name in ['l', 'look', 'examine', 'e', 'inspect', 'observe']:
             action = ActionType.LOOK
@@ -39,6 +39,8 @@ class CommandParser(Printer):
             if argument == '':
                 self.print('What would you like to interact with?')
                 action = ActionType.IGNORED
+            elif argument in ['eye', 'eyes']:
+                action = ActionType.LOOK_ROOM
             else:
                 action = ActionType.USE
         elif action_name in ['i', 'inv', 'inventory', 'storage']:
@@ -206,7 +208,7 @@ room = Room("You are sitting before a wooden table.",
             "closer if you want to discover anything with it.",
             Lighting.DARK, False, spider1_Tick)
 
-room.items = [arms, candle, chair, coin_slot, display_case, ears, eyes, head, keypad, legs, me, mouth,
+room.items = [arms, candle, chair, coin_slot, display_case, ears, face, head, keypad, legs, me, mescellaneous, mouth,
               newspaper_article, nose, snack, table, vending_machine, you]
 room.hidden = [dead_rat, dead_spider, money_box, project, rat, room_coin, spider]
 

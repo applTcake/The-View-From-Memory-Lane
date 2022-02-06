@@ -79,36 +79,32 @@ def torch_use(item, ls):
 
 news = [['DADADADADA',
          'Someone went missing..guess who took them.',
-         'Someone went missing..guess who took them. (us. yes, this dodgy newspaper company is the one behind this dodgy case.)'],
+         """Someone went missing..guess who took them. (us. yes, this dodgy newspaper company is the one behind this dodgy case.'
+         Go ahead. Sue us.)"""],
         ['MISSING PERSONS', """see previous article.
         yeah so someone really important went missing.""",
-         "someone really important went missing. (if you ship us 10000kg of candy to our headquarters we will tell you"
-         " where they are/return them to you if we're feeling generous.)"],
+         "yeah so someone really important went missing. (if you ship us 10000kg of candy to our headquarters we will "
+         "tell you where they are/return them to you if we're feeling generous.)"],
         ['CHAMELEON FACTS 101 - THE SPECIES OF SWAGGER',
-         """* chamelions are great they inhabit warm climets, mainly Africa and Madagascar. But they probly originated from China and Central Europe and moved there becos they smort >:3333
-         * paleontologists say chamelions first evolved 65 million years ago not long after the dinosaurs went extinct.
-         * Chameleons come in all shapes and sizes, from the Brookesia Micra, the size of a matchstick head, to the Parsons chameleon, which is the size of a domestic cat. :DDDD
+         """* chamelions are great they inhabit warm climets, mainly Africa and Madagaskr
+         * chamelions come in all sheps and sizez, from the size of a matchstick hed, to size of cat :DDDD
+         * chamelions dont actually chandge colr to blend into suroundings - they use it to reflect their mood :DD as they shood
+         * they turn into very vibrant colrs when angri >:(( and turn black when scared or kold
+         * and they actually chandge colr using nano salt cristlz in their skin, they stRETCh their skin to change colr. VERY COOL
+         * chamelion tails are very stronk and long - they help rap around branches and support climing.
+         * chamelion tungs are ruffly 1.5 to 2 times longer than the chamelion’s body :OOO The tung is coiled up like a loaded spring that shoots out at food
+         * chamelion saliva is 1000 times stickier than hewman saliva and can accelerate from 0 to 96km/h in 1/100th of a second
+         * Despite their amazing feechurs, half of chamelion species are endangered, due to range restrictions and habitat conditions, making them more vulnerable to the effects of climate change and thus more prone to extinction.
          
-         * Despite their incredible features, half of the chameleon species are endangered, due to range restrictions and habitat conditions, making them more vulnerable to the effects of climate change, and thus more prone to extinction.
-         ...
          Moving on :DDD
-         * All sorts of myths surround a chameleon’s color-changing ability and their reasons why - the main reason they change color is to reflect their mood, as well as temperature, and light. They don’t change color to blend into their surroundings.
-         * Scientists recently discovered that instead of changing color by changing the pigment in their skin, chameleons actually change color using nano salt crystals in their skin cells to refract light; change color by stretching their skin and moving the crystals closer together or further away from each other. The crystals refract light at different wavelengths which make them change from green, blue, yellow and so on. Amazing to think such an ability evolved naturally in chameleons.
-         * When angry, chameleons will change to extremely vibrant colors signalling their anger and their intention to fight the threat that’s facing them; mainly applies to males. They also show beautiful bright colors when sleeping.
-         * When frightened a chameleon will turn black and glare at the threat very intently whilst waiting to find a moment to escape. Chameleons also turn black when they are cold.
-         * Chameleons are arboreal, meaning they are primarily found in trees and very rarely on the ground amongst the leaves. 
-         Because of this, their tails are prehensile, meaning that they are capable of using their tails to wrap around branches to hang from them and use them to support their climbing.
-         In most cases a chameleon’s tail is nearly twice as long as its body :OOO
-         * Monocular vision; chameleon’s eyes move independently of one another enabling it to have 360 degree vision, and can see an insect from 10 metres away
-         * The length of a chameleon’s tongue varies from species to species but they are generally around 1.5 to 2 times longer than a chameleon’s body from tip of nose to tip of tail. They keep their tongue coiled up like a loaded spring that shoots out in the same way when hunting for food; not only is there saliva 1000 times stickier than human saliva, some could accelerate from 0 to 96km/h in 1/100th of a second.
-         * Monocular vision; chameleon’s eyes move independently of one another enabling it to have 360 degree vision, and can see an insect from 10 metres away
-         * Other than insects, chameleons can also eat a wide variety of plants; larger species will also eat rodents and some have been known to catch small birds as prey.
-         * In contrast to us humans, who require social interaction for both our mental and physical health, chameleons are solitary creatures; they would much rather be left alone and are highly stressed when too near other creatures. They only come into contact with other chameleons when one encroaches on another’s territory or when trying to mate.
-         * When chameleons are young they grow rapidly and shed their skin every few weeks. As they get older they continuously shed their skin but less frequently. The reasons for shedding are to maintain cleanliness, renew their skin or to accommodate rapid growth when they are younger.
-         * Chameleons can’t sweat; instead have a gland around their nose that they use to excrete excess salt. This forms a white crust around their nose that many people mistake for calcium.
-         * Chameleons can see in the ultraviolet spectrum. It’s thought this is useful for communication with other chameleons, a theory further advanced by the fact nearly all chameleons tested actually have spots on their head that glow up under UV light. The glowing actually emanates from their bones at points where the skin is transparent enough to allow light to penetrate.
-         
-        """],
+         * chamelion eyes muv independependedently, so they hav 360 degree vision. they can also see an insekt 10 metres away :0
+         * chamelions eat lotta plants. rodents and birbs too, but also PLANTS. (and insects)
+         * chamelions like lots of time alone - they get stress when too near other kreechurs :-: SO RESPECT BOUNDRIES!!!
+         * chamelions shed less skin when they are old
+         * chamelions dont swet; they have a gland around their nose that they use to excrete excess salt, and this forms a white crust around their nose.
+         * chamelions can see altraviolettt!! They use it communiket with other chamelions!!!
+         * chamelions even have spots on their hed that glow under UV lite!! And the glow comes from their bones :0000""",
+         ""],
         ['FEBRUARY 16th - Some random snippet from an interview transcript',
          """~2Today is a bad day.
          ~2There isn't any news to suggest that as such. In fact, it's more peaceful than usual.
@@ -167,7 +163,7 @@ def news_flip(item, ls):
         if item.count == 0:
             ans = multi(None, "(Type 'next' to move between articles. Type 'back' to return.) ", (b, n), None, True,
                         False)
-        elif item.count == 2:
+        elif item.count == len(news)-1:
             if first['coin'] == 0:
                 first['coin'] = 1
             ans = multi(None, "(Type 'previous' to move between articles. Type 'back' to return.) ", (b, p), None, True,
@@ -354,6 +350,7 @@ spiderStory = """~2Y'know.
     ~3Still, the question remains:
     ~3Will the itsy-bitsy spider climb up the spout again?3&"""
 
+spiderFace = "~2Stop making faces like that, you're scaring the spider.2&"
 
 def spider_use(item, ls):
     from game_objects import monster_energy_gun, snack9, dead_rat, spider
@@ -372,7 +369,9 @@ def spider_use(item, ls):
                  [theyit('name', None), theyit('rename', None)],
                  [('run')],
                  [('let it be', 'let be', 'let them be')],
-                 [theyit('look', None), theyit('observe', None), theyit('examine', None), theyit('inspect', None)],
+                 [theyit('look', 'at'), theyit('observe', None), theyit('examine', None), theyit('inspect', None),
+                  theyit('eye', None), theyit('glance', 'at'), theyit('view', None), theyit('see', None),
+                  theyit('watch', None), theyit('study', None)],
                  [theyit('pet', None), theyit('pat', None), theyit('stroke', None), theyit('touch', None),
                   theyit('caress', None)],
                  [theyit('poke', None)],
@@ -381,36 +380,45 @@ def spider_use(item, ls):
                  [theyit('hug', None), theyit('cuddle', None), theyit('love', None), theyit('care', None),
                   theyit('care', 'for')],
                  [theyit('play', 'with'), theyit('tickle', None), theyit('amuse', None), theyit('befriend', None)],
-                 [theyit('flirt', 'with'), theyit('impress', None)],
+                 [theyit('flirt', 'with'), theyit('wink', 'at')],
                  [theyit('kiss', None), theyit('smooch', None), theyit('make out', 'with')],
                  [theyit('date', None), theyit('go out', 'with'), theyit('go on a date', 'with')],
                  [theyit('speak', 'to'), theyit('speak', 'with'), theyit('talk', 'to'), theyit('chat', 'to'),
                   theyit('chat', 'with'), theyit('gossip', 'with'), theyit('converse', 'with'),
                   theyit('communicate', 'with'), theyit('ask', None), theyit('deep talk', 'with')],
-                 [theyit('tease', None), theyit('prank', None), theyit('trick', None)],
+                 [theyit('tease', None), theyit('prank', None), theyit('trick', None), theyit('impress', None),
+                  theyit('fool', None), theyit('dupe', None), theyit('entertain', None)],
                  [theyit('eat', None), theyit('devour', None), theyit('consume', None), theyit('swallow', None),
-                  theyit('chew', None), theyit('bite', None)],
+                  theyit('chew', None), theyit('chew', 'on'), theyit('bite', None), theyit('munch', None),
+                  theyit('munch', 'on'), theyit('cronch', None), theyit('cronch', 'on')],
                  [theyit('kill', None), theyit('murder', None), theyit('destroy', None), theyit('eliminate', None),
-                  theyit('annihilate', None), theyit('obliterate', None), theyit('exterminate', None)],
+                  theyit('annihilate', None), theyit('obliterate', None), theyit('exterminate', None),
+                  theyit('assassinate', None)],
                  [theyit('harm', None), theyit('hurt', None), theyit('attack', None), theyit('hit', None),
                   theyit('squash', None), theyit('squish', None), theyit('kick', None), theyit('punch', None),
                   theyit('throw', None), theyit('toss', None), theyit('stomp', None), theyit('betray', None),
-                  theyit('anger', None), ('make them cry', 'make it cry')],
+                  theyit('anger', None), theyit('laugh at', None), theyit('insult', None), theyit('deceive', None),
+                  ('lie', 'make them cry', 'make it cry')],
                  [theyit('torture', None), theyit('torment', None), theyit('burn', None), theyit('bash', None),
-                  theyit('smash', None), theyit('crush', None), theyit('stab', None)],
+                  theyit('smash', None), theyit('crush', None), theyit('stab', None), theyit('crunch', None)],
                  [theyit('manipulate', None), theyit('abuse', None), theyit('bully', None), theyit('traumatise', None),
                   theyit('gaslight', None), theyit('gatekeep', None), theyit('girlboss', None),
                   theyit('threaten', None), theyit('terrify', None), theyit('horrify', None), theyit('petrify', None),
-                  theyit('backstab', None), theyit('blackmail', None),
-                  ('gaslight gatekeep girlboss', 'gaslight, gatekeep, girlboss')],
+                  theyit('backstab', None), theyit('blackmail', None), theyit('gaslight gatekeep girlboss', None)],
                  [('nothing')],
                  [theyit('abandon', None), theyit('desert', None), theyit('neglect', None), theyit('ignore', None),
                   theyit('perturb', None), theyit('unsettle', None), theyit('upset', None), theyit('disturb', None),
-                  theyit('unnerve', None)],
+                  theyit('unnerve', None), theyit('disown', None), theyit('reject', None), theyit('renounce', None),
+                  theyit('forsake', None)],
                  [theyit('scream', 'at'), theyit('shout', 'at'), theyit('shriek', 'at'), theyit('yell', 'at'),
                   theyit('spook', None), theyit('scare', None), theyit('alarm', None), theyit('frighten', None),
                   theyit('startle', None), theyit('surprise', None), theyit('unnerve', None), theyit('trigger', None),
-                  ('creep out', 'creep it out', 'creep them out', 'freak out', 'freak it out', 'freak them out')]
+                  ('creep out', 'creep it out', 'creep them out', 'freak out', 'freak it out', 'freak them out')],
+                 [theyit('smile', 'at'), theyit('grin', 'at'), theyit('beam', 'at'), theyit('leer', 'at'),
+                  theyit('smirk', 'at'), theyit('sneer', 'at'), theyit('scowl', 'at'), theyit('pout', 'at'),
+                  theyit('frown', 'at'), theyit('glare', 'at'), theyit('gaze', 'at'), theyit('stare', 'at'),
+                  theyit('spy on', None), theyit('glower', 'at'), theyit('make faces', 'at'),
+                  theyit('pull faces', 'at')]
                  ), spider_use_again, False, True)
     if ans == 0:
         return
@@ -485,7 +493,7 @@ def spider_use(item, ls):
                            """You hug {s}.
     ~2{S} is stunned. They look up at you inquisitively.""",
                            """You tickle {s}.
-    ~2{S} isn't impressed.""",
+    ~2{S} isn't impressed.1&""",
                            "~1Can spiders blush?1&",
                            """You give {s} a heartfelt kiss.
     ~2Aww <33""",
@@ -507,12 +515,14 @@ def spider_use(item, ls):
     ~2aaaaaaaaaaaa
     ~3AaaaAAAAAAAAaaaaAAAAAAAAAAAAAAAAAAAAAA...
     ~5..don't you dare.2&""",
-                           "~2You're scary.1&",
+                           """...
+                           ~2You're scary.1&""",
                            "~2You're boring.1&",
                            """...2&
     mhm.~1""",
                            """Gahh!!!
-    ~1Stop making loud noises like that! >:(1&"""
+    ~1Stop making loud noises like that! >:(1&""",
+                           spiderFace
                            ]
         item.print(spider_response[ans].format(s=spiderName, S=SpiderName))
     return

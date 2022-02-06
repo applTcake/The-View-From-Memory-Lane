@@ -107,7 +107,7 @@ def yn(prompt):
         new = ans.lower().rstrip().strip(punctuation)
         new = ''.join(sorted(set(new), key=new.index))
         responses = (['y', 'yes', 'yas', 'yeah', 'yesir', 'yup', 'yep', 'ya', 'ye'],
-                     ['n', 'no', 'nah', 'nah bruv', 'nup', 'nope'])
+                     ['n', 'no', 'nah', 'nah bruv', 'nup', 'nop', 'nope'])
         for response in responses:
             if new in response:
                 return responses.index(response)
