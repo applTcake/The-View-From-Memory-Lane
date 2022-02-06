@@ -4,6 +4,10 @@ from string import punctuation
 from events import *
 
 
+def same2(phrase):
+    return [phrase, None, phrase]
+
+
 class Printer:
     screenWidth = 100
 

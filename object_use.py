@@ -77,15 +77,15 @@ def torch_use(item, ls):
     torch.lightEmit = not torch.lightEmit
 
 
-news = [['DADADADADA',
+news = [[[' dodgy newspaper article', 'headline'],'DADADADADA',
          'Someone went missing..guess who took them.',
-         """Someone went missing..guess who took them. (us. yes, this dodgy newspaper company is the one behind this dodgy case.'
+         """Someone went missing..guess who took them. (us. yes, this dodgy newspaper company is the one behind this dodgy case.
          Go ahead. Sue us.)"""],
-        ['MISSING PERSONS', """see previous article.
+        [[' dodgy newspaper article', 'headline'], 'MISSING PERSONS', """see previous article.
         yeah so someone really important went missing.""",
          "yeah so someone really important went missing. (if you ship us 10000kg of candy to our headquarters we will "
          "tell you where they are/return them to you if we're feeling generous.)"],
-        ['CHAMELEON FACTS 101 - THE SPECIES OF SWAGGER',
+        [['n article from a magazine', 'heading'], 'CHAMELEON FACTS 101 - THE SPECIES OF SWAGGER',
          """* chamelions are great they inhabit warm climets, mainly Africa and Madagaskr
          * chamelions come in all sheps and sizez, from the size of a matchstick hed, to size of cat :DDDD
          * chamelions dont actually chandge colr to blend into suroundings - they use it to reflect their mood :DD as they shood
@@ -105,7 +105,7 @@ news = [['DADADADADA',
          * chamelions can see altraviolettt!! They use it communiket with other chamelions!!!
          * chamelions even have spots on their hed that glow under UV lite!! And the glow comes from their bones :0000""",
          ""],
-        ['FEBRUARY 16th - Some random snippet from an interview transcript',
+        [[' piece of paper from an unknown source,', 'title hastily scribbled on top'], 'FEBRUARY 16th - Interview Transcript',
          """~2Today is a bad day.
          ~2There isn't any news to suggest that as such. In fact, it's more peaceful than usual.
          ~4But I've just got this feeling, you know?
@@ -143,23 +143,23 @@ def news_flip(item, ls):
     b = back
     while ans != b:
         if ls == Lighting.LIGHT:
-            item.print('\n' + news[item.count][0] + '\n\n' + news[item.count][1] + '\n')
+            item.print('\n' + news[item.count][1] + '\n\n' + news[item.count][2] + '\n')
         elif ls == Lighting.DIM:
-            item.print(f"""It is a newspaper article with the headline: {news[item.count][0]}.
+            item.print(f"""It is a{news[item.count][0][0]} with the {news[item.count][0][1]}: {news[item.count][1]}.
       You'll need some more light to read all of it.""")
         if torch.lightEmit:
             if first['uv_news']:
                 item.print("""~4Oh.
-        ~1The torchlight reveals something else written on the newspaper.3&""")
+        ~1The torchlight reveals something else written on the paper.3&""")
                 if ls != Lighting.DARK:
                     item.print("""A series of annotations, urgently scrawled out on its margins.2&
           The light is feeble, so you'll need to darken the room to see it more clearly.2&""")
                 first['uv_news'] = False
             elif ls != Lighting.DARK:
-                item.print("""The torchlight reveals something else written on the newspaper: a series of annotations, urgently scrawled out on its margins.
+                item.print("""The torchlight reveals something else written on the paper: a series of annotations, urgently scrawled out on its margins.
                    The light is feeble, so you'll need to darken the room to see it more clearly.""")
             if ls == Lighting.DARK:
-                item.print('\n' + news[item.count][0] + '\n\n' + news[item.count][2] + '\n')
+                item.print('\n' + news[item.count][1] + '\n\n' + news[item.count][3] + '\n')
         if item.count == 0:
             ans = multi(None, "(Type 'next' to move between articles. Type 'back' to return.) ", (b, n), None, True,
                         False)
@@ -313,16 +313,12 @@ def spider_kill(item):
         "and over until it stops twitching, are you happy now?")
     room.remove_room(item)
     room.add_room(dead_spider)
-    monster_energy_gun.Description = ["""...
+    monster_energy_gun.Description = same2("""...
   ~2You've..
-  ~1...changed.2&""", None, """...
-  ~2You've..
-  ~1...changed.2&"""]
-    monster_energy_gun.useDescription = ["""...
+  ~1...changed.2&""")
+    monster_energy_gun.useDescription = same2("""...
   ~2Don't you dare use that thing.
-  ~2murderer.2&""", None, """...
-  ~2Don't you dare use that thing.
-  ~2murderer.2&"""]
+  ~2murderer.2&""")
 
 
 def theyit(string, plus):

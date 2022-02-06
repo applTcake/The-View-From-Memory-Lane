@@ -21,6 +21,9 @@ class ActionType(Enum):
     INVALID = 7
 
 
+inv = ['i', 'inv', 'inventory', 'storage']
+
+
 class CommandParser(Printer):
     def parse_command(self, command):
         command_parts = command.lower().rstrip().split(" ", 1)
@@ -30,22 +33,26 @@ class CommandParser(Printer):
         else:
             argument = ''
 
-        if action_name in ['l', 'look', 'examine', 'e', 'inspect', 'observe'] and argument in ['around', 'surroundings',
-                                                                                               'room', 'eye', 'eyes', '']:
-            action = ActionType.LOOK_ROOM
-        elif action_name in ['l', 'look', 'examine', 'e', 'inspect', 'observe']:
-            action = ActionType.LOOK
+        if action_name in ['l', 'look', 'examine', 'e', 'inspect', 'observe']:
+            if argument in ['around', 'surroundings', 'room', 'eye', 'eyes', '']:
+                action = ActionType.LOOK_ROOM
+            elif argument in inv:
+                action = ActionType.INVENTORY
+            else:
+                action = ActionType.LOOK
         elif action_name in ['use', 'u', 'interact']:
             if argument == '':
                 self.print('What would you like to interact with?')
                 action = ActionType.IGNORED
             elif argument in ['eye', 'eyes']:
                 action = ActionType.LOOK_ROOM
+            elif argument in inv:
+                action = ActionType.INVENTORY
             else:
                 action = ActionType.USE
-        elif action_name in ['i', 'inv', 'inventory', 'storage']:
+        elif action_name in inv:
             action = ActionType.INVENTORY
-        elif action_name in ['exit', 'bye', 'goodbye', 'quit', 'stop']:
+        elif action_name in ['exit', 'bye', 'goodbye', 'quit', 'stop', 'leave', 'end']:
             action = ActionType.EXIT
         elif action_name in ['help', 'h', 'controls', 'ctrls', 'ctrl', 'c', 'rules']:
             action = ActionType.HELP

@@ -10,11 +10,6 @@ meDescribe = """~1uh
   ~~~1.5that's certainly you :)2&"""
 earTwitch = ''.join(random.choices(["You can't move your ears.", "You wiggle your ears with ease."], [0.8, 0.2]))
 
-
-def same2(phrase):
-    return [phrase, None, phrase]
-
-
 # Room Items
 arms = Item(
     ['hands', 'hand', 'arm', 'arms', 'fingers', 'finger'],
@@ -45,19 +40,19 @@ chair = Item(['chair', 'seat', 'armchair', 'wooden chair', 'wooden seat', 'woode
 
 
 def keypad_glow(item, ls):
+    from main import player, room
     if vending_machine.count == 1:
         item.print(keypadGlowing)
-    else:
+    elif not room.get_uv_status(player):
         item.print(TooDark)
 
 
 def keypad_glow_use(item, ls):
-    from main import player, room
     if vending_machine.count == 1:
         item.print("The glow of the keypad isn't quite bright enough for you to operate the machine.")
     elif item == coin:
         item.print(needLight)
-    elif not room.get_uv_status(player):
+    else:
         item.print(Rummage)
 
 
@@ -192,7 +187,6 @@ you = Item(
 dead_rat = Item(
     ['rat', 'ratthew'],
     ["""...
-   ~2Why.
    ~2Why is it still staring at you?2&"""],
     ["""...
    ~2You think its for your own good that you don't.1&"""])
@@ -277,8 +271,7 @@ def spider_describe(item, ls):
 
 
 spider = ItemRoom(
-    ['spider'], [spider_status],
-    [spider_describe], [spider_use])
+    ['spider'], [spider_status], [spider_describe], [spider_use])
 
 
 # Inventory

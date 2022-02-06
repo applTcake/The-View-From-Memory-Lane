@@ -39,9 +39,9 @@ def intro():
     from util import Printer
     for i in range(5):
         player.print('_0.2&&&')
-    player.print("""Are you quite dead yet?
-    ~2Cause it's so quiet in here.
-    ~2You haven't had a new thought in years.
+    player.print("""are you quite dead yet?
+    ~2cause it's so quiet in here.
+    ~2and all of your thoughts are rotting on the edges..
     ~3...
     ~2it's not so bad, i admit.
     ~2but do you really think it will end that easily?
@@ -50,13 +50,14 @@ def intro():
     ~2
     IT'S TIME FOR YOU TO WAKE UP3&""")
 
-    # """It's quite in here.
-    # ~2So quiet.
-    # ~2hehehe
-    # ~2ahahahahaha...
-    # ~4And as much as i'd like for it to stay that way...
-    # ~2
-    # IT'S TIME FOR YOU TO WAKE UP2&"""
+    '''It's quite in here.
+     ~2So quiet.
+     ~2hehehe
+     ~2ahahahahaha...
+     ~4And as much as i'd like for it to stay that way...
+     ~2
+     IT'S TIME FOR YOU TO WAKE UP2&'''
+
     for i in range(30):
         player.print('_' * Printer.screenWidth + '0.1&&&')
     player.print("""~2huh
@@ -71,6 +72,10 @@ def events():
     from main import player, room
     if room.counter == 0:
         room.stop_tick()
+        if room.tickActions == spider1_Tick:
+            room.tickActions = vibe_Tick
+        if room.tickActions == vibe_Tick:
+            room.start_tick()
     if first['spider'] == 1 and player.get_lighting_status() != Lighting.DARK:
         player.print('~2There is a large furry spider before you!!')
         spider1()
@@ -80,7 +85,8 @@ def events():
     elif first['spider'] == 3:
         spider_status(spider, player.get_lighting_status())
         first['spider'] = 4
-    if room.tickActions == spider1_Tick and room.counter == 0 and not first['torch']:
+    if (room.tickActions == spider1_Tick and room.counter == 0) or (
+            room.tickActions == vibe_Tick and first['rat'] == 0) and not first['torch']:
         room.tickActions = rat_Tick
         room.start_tick()
     if first['rat'] == 1:
@@ -94,6 +100,8 @@ def events():
     if room.tickActions == ratHunt_Tick and room.counter == 0 and spider in room.items and \
             player.get_lighting_status() != Lighting.DARK and first['spider'] < 5:
         spider_friend()
+        room.tickActions = vibe_Tick
+        room.start_tick()
 
 
 spider1_Tick = [
@@ -171,8 +179,24 @@ def spider1():
     player.print("Besides, you've always been quite fond of spiders.2&")
 
 
+vibe_Tick = [None, None,
+             'spider_vibe/{S} is striding around the candlestick.',
+             None, None, None,
+             'spider_vibe/{S} is crawling on the vending machine.',
+             None, None, None,
+             'spider_vibe/{S} is stalking across the newspapers.',
+             None, None, None,
+             'spider_vibe/{S} approaches you.',
+             None]
+
+
+def spider_vibe(count):
+    global spiderstatus
+    spiderstatus = count[1]
+
+
 rat_Tick = [
-    None, None, None,
+    None, None, None, None, None,
     """rat_tense/~2You hear a scrabbling of...claws?? on the table.
   ~3(please tell me that spiders have claws)0.5&&&/~2You hear a scrabbling of...claws?? on the table.""",
     None,
@@ -272,16 +296,12 @@ def rat_kill(count):
         if spider in room.items:
             spiderstatus = "{S} carefully assesses their meal."
         else:
-            monster_energy_gun.Description = [""""...
+            monster_energy_gun.Description = same2(""""...
       ~2I understand that you have been through...a lot.
       ~3But that does not excuse your behaviour.
       ~3So I implore you
-      ~2Please stop.2&""", None, """"...
-      ~2I understand that you have been through...a lot.
-      ~3But that does not excuse your behaviour.
-      ~3So I implore you
-      ~2Please stop.2&"""]
-            monster_energy_gun.useDescription = ["~1Please stop.2&", None, "~1Please stop.2&"]
+      ~2Please stop.2&""")
+            monster_energy_gun.useDescription = same2("~1Please stop.2&")
 
 
 def naming_ceremony(name):
