@@ -44,7 +44,7 @@ def keypad_glow(item, ls):
     if vending_machine.count == 1:
         item.print(keypadGlowing)
     elif not room.get_uv_status(player):
-        item.print(TooDark)
+        item.print(tooDark)
 
 
 def keypad_glow_use(item, ls):
@@ -112,21 +112,19 @@ mouth = Item(['mouth'], same2(meDescribe), same2(chat))
 
 
 def light_room_news(item, ls):
-    item.print(
-        f"There is a messy pile of newspaper articles shoved to the left side of the table. The headline at the top "
-        f"reads: {news[item.count][0]}")
+    item.print(f"""There is a messy pile of articles and papers shoved to the left side of the table.
+    The {news[item.count][0][1]} on top reads: {news[item.count][1]}.""")
 
 
-newspaper_article = ItemRoomStack(
-    ['newspaper article', 'newspaper articles', 'newspaper', 'newspapers', 'papers', 'article', 'articles', 'na',
-     'news'],
-    ["There is a stack of papers on one side of the table. Newspapers, perhaps.", light_room_news],
-    [None, None, news_flip, news_flip], [None, None, news_flip, news_flip], 0)
+articles = ItemRoomStack(
+    ['article', 'articles', 'news', 'newspapers', 'papers', 'paper', 'magazines'],
+    ["There is a haphazard stack of papers on one side of the table.", light_room_news],
+    [None, None, article_flip, article_flip], [None, None, article_flip, article_flip], 0)
 
 nose = Item(
     ['nose'], same2(meDescribe),
     ["You don't particularly smell anything.", None,
-     "The scent from the candle almost makes you tear up."])
+     "The scent from the candle fills the air."])
 
 snack = Item(
     ['snack', 'snacks', 'treat', 'treats', 'junk food', 'junk food'],

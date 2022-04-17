@@ -86,26 +86,35 @@ news = [[[' dodgy newspaper article', 'headline'],'DADADADADA',
          "yeah so someone really important went missing. (if you ship us 10000kg of candy to our headquarters we will "
          "tell you where they are/return them to you if we're feeling generous.)"],
         [['n article from a magazine', 'heading'], 'CHAMELEON FACTS 101 - THE SPECIES OF SWAGGER',
-         """* chamelions are great they inhabit warm climets, mainly Africa and Madagaskr
-         * chamelions come in all sheps and sizez, from the size of a matchstick hed, to size of cat :DDDD
-         * chamelions dont actually chandge colr to blend into suroundings - they use it to reflect their mood :DD as they shood
-         * they turn into very vibrant colrs when angri >:(( and turn black when scared or kold
-         * and they actually chandge colr using nano salt cristlz in their skin, they stRETCh their skin to change colr. VERY COOL
-         * chamelion tails are very stronk and long - they help rap around branches and support climing.
-         * chamelion tungs are ruffly 1.5 to 2 times longer than the chamelion’s body :OOO The tung is coiled up like a loaded spring that shoots out at food
-         * chamelion saliva is 1000 times stickier than hewman saliva and can accelerate from 0 to 96km/h in 1/100th of a second
-         * Despite their amazing feechurs, half of chamelion species are endangered, due to range restrictions and habitat conditions, making them more vulnerable to the effects of climate change and thus more prone to extinction.
+         """* chamelions are great they inhabit warm climets, like reinforests and desserts
+         * chamelions dont actually chanj colour to blend into suroundings - they use it to reflect their mood :DD as they shoud
+         * and they actually chanj colour using salt cristlz in their skin, they stRETCh their skin to chanj colour. VERY COOL
+         * chamelion tails are very stronk and long - they help rap around branches and support climing
+         * chamelion tungs are ruffly 1.5 to 2 times longer than the body :OOO The tung is usually coiled up like a spring, and then shoot out at food
+         * chamelion spit is 1000 times stikkier than human spit    good for catching food
+         * Half of chameleon species are endangered, due to range restrictions and habitat conditions, making them more vulnerable to the effects of climate change and thus more prone to extinction.
          
          Moving on :DDD
-         * chamelion eyes muv independependedently, so they hav 360 degree vision. they can also see an insekt 10 metres away :0
-         * chamelions eat lotta plants. rodents and birbs too, but also PLANTS. (and insects)
-         * chamelions like lots of time alone - they get stress when too near other kreechurs :-: SO RESPECT BOUNDRIES!!!
+         * chamelion eyes muv independependedently, so they have 360 degreee vison. They can also see an insekt 10 metres away :0
+         * chamelions eat lotta plamts. rodents and birbs too, but also PLAMTS. (and insekts)
+         * chamelions like lots of time alone - they get strest when too near other kreechurs :-: SO RESPECT BOUNDRIES!!!
+         * chamelions can see altraviolettt!! they use it communicate with other chamelions!!!
+         * chamelions even glow under UV lite!! And the glow comes from their bones :0000
          * chamelions shed less skin when they are old
-         * chamelions dont swet; they have a gland around their nose that they use to excrete excess salt, and this forms a white crust around their nose.
-         * chamelions can see altraviolettt!! They use it communiket with other chamelions!!!
-         * chamelions even have spots on their hed that glow under UV lite!! And the glow comes from their bones :0000""",
-         ""],
-        [[' piece of paper from an unknown source,', 'title hastily scribbled on top'], 'FEBRUARY 16th - Interview Transcript',
+         
+         (Alongside the text is an image of an aquamarine Parsons chameleon. The caption reads: "some chamelions are as big as cat : DDDD")""",
+         """There is a single comment near the bottom-right corner of the page. It reads:
+         
+                Wouldn't it be nice if we were all solitary creatures?
+         
+         The image of the Parsons chameleon has an odd, compelling pattern on its head."""],
+        [['n overzealous advert poster', 'heading with 3D fluorescent block letters'], 'TAKE A BREAK!!',
+        """TAKE A BREAK, AND GET AWAY!
+        
+        RUN AWAY WITH US FOR THE SUMMER. LET'S GO UPSTATE!!
+        
+        (A stock photo of a 'family vacation' is used as the background)""", ""],
+        [[' random piece of paper from an unknown source,', 'hastily-scribbled title'], 'FEBRUARY 16th - Transcript',
          """~2Today is a bad day.
          ~2There isn't any news to suggest that as such. In fact, it's more peaceful than usual.
          ~4But I've just got this feeling, you know?
@@ -134,7 +143,7 @@ news = [[[' dodgy newspaper article', 'headline'],'DADADADADA',
          ]]
 
 
-def news_flip(item, ls):
+def article_flip(item, ls):
     from game_objects import torch, coin
     from main import player
     ans = None
@@ -146,8 +155,8 @@ def news_flip(item, ls):
             item.print('\n' + news[item.count][1] + '\n\n' + news[item.count][2] + '\n')
         elif ls == Lighting.DIM:
             item.print(f"""It is a{news[item.count][0][0]} with the {news[item.count][0][1]}: {news[item.count][1]}.
-      You'll need some more light to read all of it.""")
-        if torch.lightEmit:
+            You'll need some more light to read all of it.""")
+        if torch.lightEmit and news[item.count][3]:
             if first['uv_news']:
                 item.print("""~4Oh.
         ~1The torchlight reveals something else written on the paper.3&""")
@@ -160,6 +169,8 @@ def news_flip(item, ls):
                    The light is feeble, so you'll need to darken the room to see it more clearly.""")
             if ls == Lighting.DARK:
                 item.print('\n' + news[item.count][1] + '\n\n' + news[item.count][3] + '\n')
+        elif ls == Lighting.DARK:
+            item.print('\n' + news[item.count][1] + '\n\n' + uvNothing + '\n')
         if item.count == 0:
             ans = multi(None, "(Type 'next' to move between articles. Type 'back' to return.) ", (b, n), None, True,
                         False)

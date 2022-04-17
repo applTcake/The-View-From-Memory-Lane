@@ -44,7 +44,7 @@ def intro():
     ~2and all of your thoughts are rotting on the edges..
     ~3...
     ~2it's not so bad, i admit.
-    ~2but do you really think it will end that easily?
+    ~2but do you really think it will go that easily?
     ~4hehehe
     ~2ahahahahaha..
     ~2
@@ -72,10 +72,6 @@ def events():
     from main import player, room
     if room.counter == 0:
         room.stop_tick()
-        if room.tickActions == spider1_Tick:
-            room.tickActions = vibe_Tick
-        if room.tickActions == vibe_Tick:
-            room.start_tick()
     if first['spider'] == 1 and player.get_lighting_status() != Lighting.DARK:
         player.print('~2There is a large furry spider before you!!')
         spider1()
@@ -85,9 +81,12 @@ def events():
     elif first['spider'] == 3:
         spider_status(spider, player.get_lighting_status())
         first['spider'] = 4
-    if (room.tickActions == spider1_Tick and room.counter == 0) or (
-            room.tickActions == vibe_Tick and first['rat'] == 0) and not first['torch']:
+    if ((room.tickActions == spider1_Tick and room.counter == 0) or (
+            room.tickActions == vibe_Tick and first['rat'] == 0)) and not first['torch']:
         room.tickActions = rat_Tick
+        room.start_tick()
+    elif room.tickActions == spider1_Tick and room.counter == 0 and first['machine'] >= 2:
+        room.tickActions = vibe_Tick
         room.start_tick()
     if first['rat'] == 1:
         first['rat'] = 2
@@ -100,8 +99,6 @@ def events():
     if room.tickActions == ratHunt_Tick and room.counter == 0 and spider in room.items and \
             player.get_lighting_status() != Lighting.DARK and first['spider'] < 5:
         spider_friend()
-        room.tickActions = vibe_Tick
-        room.start_tick()
 
 
 spider1_Tick = [

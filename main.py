@@ -216,7 +216,7 @@ room = Room("You are sitting before a wooden table.",
             Lighting.DARK, False, spider1_Tick)
 
 room.items = [arms, candle, chair, coin_slot, display_case, ears, face, head, keypad, legs, me, mescellaneous, mouth,
-              newspaper_article, nose, snack, table, vending_machine, you]
+              articles, nose, snack, table, vending_machine, you]
 room.hidden = [dead_rat, dead_spider, money_box, project, rat, room_coin, spider]
 
 player = Player([])

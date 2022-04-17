@@ -1,7 +1,8 @@
 from util import *
 
-TooDark = "It's too dark to see."
+tooDark = "It's too dark to see."
 Rummage = "You rummage through the gloom to no avail."
+uvNothing = 'The torchlight reveals nothing unusual.'
 cantMove = "You find yourself unable to move."
 obscureVision = "The rat obscures your vision."
 
@@ -63,8 +64,7 @@ class Item(Printer):
         if ratFocus and self != rat:
             self.print(obscureVision)
         else:
-            pass_descriptions(self, self.description, light_status, uv, TooDark,
-                              'The torchlight reveals nothing unusual.')
+            pass_descriptions(self, self.description, light_status, uv, tooDark, uvNothing)
             if (isinstance(self, InvSnack) or self == empty_can) and self.count > 1:
                 self.print(f"You currently have {self.count} of them.")
 
