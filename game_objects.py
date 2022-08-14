@@ -17,7 +17,7 @@ arms = Item(
 
 
 def bright_candle(item, ls):
-    item.print(item.Description[1])
+    item.print(item.description[1])
     item.print("""It is burning passionately.
   Wax occasionally rolls down its side like tears.""")
 
