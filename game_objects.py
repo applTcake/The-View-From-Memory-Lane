@@ -91,9 +91,8 @@ keypad = Item(['keypad', 'keyboard'],
 
 legs = Item(['leg', 'legs', 'foot', 'feet', 'knees', 'toe', 'toes', 'body'], [meDescribe], same2(notStanding))
 
-me = Item(
-    ['me', 'self', 'myself'], same2(meDescribe),
-    same2("""???
+me = Item(['me', 'self', 'myself'], same2(meDescribe),
+          same2("""???
   ~1You aren't making any sense.1&"""))
 
 mescellaneous = Item(['shoulders'], [meDescribe], same2("For what?"))
@@ -123,7 +122,7 @@ articles = ItemRoomStack(
 
 nose = Item(
     ['nose'], same2(meDescribe),
-    ["You don't particularly smell anything.", None,
+    ["You don't particularly smell anything.", "You don't particularly smell anything.",
      "The scent from the candle fills the air."])
 
 snack = Item(
@@ -157,6 +156,7 @@ def vending_aha(item, ls):
     else:
         item.print("""It's a small table-top vending machine, containing an assortment of junk food.
   (dw it was restocked a few days ago, so it's safe to eat.)""")
+    #If haven't discovered money box yet, discover.
     if first['machine'] == 2:
         item.print("~4Oh, right, I almost forgot.2&")
         first['machine'] = 3
@@ -225,16 +225,16 @@ def rat_poem(item, ls):
     ~~~1.5   but you shall never fall short
     ~2                          of its gaze.
 
-    ~3Filthy bodies smeared, dragged over sin
-    ~3                              after sin,
-    ~1                              after sin.
+    ~3Filthy body smeared, dragged over sin
+    ~3                             after sin,
+    ~1                             after sin.
     ~2Ears pink with youth, as it hears no evil,
     ~4Yet it coats itself in shadow.
     ~~~2.5It saw it all.
     ~~~1.5Oh yes.
     ~~~1.5Yes it did.
 
-    ~3And when you die, it will mould a seed in the coffin of the mind
+    ~3And when you die, it will mould a seed in the coffin of your mind
     ~5Forever sleeping, watching
     ~3begging
     ~~~1.5  for mercy.3&""")

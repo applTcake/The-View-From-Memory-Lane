@@ -4,7 +4,7 @@ from util import *
 bnc = False
 back = ['b', 'back', 'return', 'escape', 'esc']
 
-
+#The Calm Message + potential loss of innocence
 def ease_to_dark():
     from main import player
     from game_objects import torch
@@ -15,19 +15,23 @@ def ease_to_dark():
 
 
 def matches_use(item, ls):
+    #If match is ticking, can blow out match
     if item.counter > 0:
         if yn("Blow out matchstick? (yep/nope) ") == 0:
             item.stop_tick()
             item.lightEmit = False
             ease_to_dark()
+    #No matches ;-;
     elif item.count == 0:
         item.print("You don't have any matches left to light.")
+    #Otherwise, match can be struck
     else:
         if ls == Lighting.DARK:
             item.print('You strike a match. You start to discern some things in front of you.')
             if first['match']:
                 item.print('~2..Turn back now. This is your final warning.2&')
                 first['match'] = False
+        #In light or dim lighting
         else:
             item.print("You strike another match. The room is already bright enough to see because of the candle.")
         item.decrement()
@@ -37,18 +41,23 @@ def matches_use(item, ls):
 
 def candle_use(item, ls):
     from game_objects import matches
+    #Toggle on
     if ls == Lighting.DIM:
+        #First time
         if first['candle']:
             item.print("""As you transfer the flame of the match to the candle, you are taken aback by how vibrantly the wick blazes up.
       ~3It is as though the candle has been aching for this precise moment for a very, very long time.
       ~4The brightness hurts your eyes a little, as the dancing light illuminates your vicinity with greater clarity.4&""")
             first['candle'] = False
+        #Not first time ;)
         else:
             item.print('The fire returns to the candle, with the vigour of a starved traveller drinking from an oasis.')
+        #Blow out match, stop tick
         item.print("You blow out the match.")
         matches.stop_tick()
         matches.LightEmit = False
         item.lightEmit = True
+    #Toggle off
     else:
         if yn('Blow out candle? (yup/nup) ') == 0:
             item.print('You swear the flame gives out a scream as you snuff it out with ease.2&')
@@ -66,12 +75,14 @@ def lose_innocence(item, num):
 
 def torch_use(item, ls):
     from game_objects import torch
+    #Toggle on
     if not torch.lightEmit:
         item.print('A muted blue glow shines out from the torch, barely visible to the eye.')
         if ls == Lighting.DARK and first['torch']:
             lose_innocence(item, 0)
         elif not first['torch']:
             item.print('Another great example of a pathetic UV flashlight.')
+    # Toggle off
     else:
         item.print('You turn off the torch.')
     torch.lightEmit = not torch.lightEmit
@@ -105,7 +116,7 @@ news = [[[' dodgy newspaper article', 'headline'],'DADADADADA',
          (Alongside the text is an image of an aquamarine Parsons chameleon. The caption reads: "some chamelions are as big as cat : DDDD")""",
          """There is a single comment near the bottom-right corner of the page. It reads:
          
-                Wouldn't it be nice if we were all solitary creatures?
+            I wish I were a solitary creature.
          
          The image of the Parsons chameleon has an odd, compelling pattern on its head."""],
         [['n overzealous advert poster', 'heading with 3D fluorescent block letters'], 'TAKE A BREAK!!',
@@ -113,7 +124,7 @@ news = [[[' dodgy newspaper article', 'headline'],'DADADADADA',
         
         RUN AWAY WITH US FOR THE SUMMER. LET'S GO UPSTATE!!
         
-        (A stock photo of a 'family vacation' is used as the background)""", ""],
+        (The poster has a stock photo of a nuclear family with hiking equipment, photoshopped in front of a countryside resort in Sweden or some place.)""", ""],
         [[' random piece of paper from an unknown source,', 'hastily-scribbled title'], 'FEBRUARY 16th - Transcript',
          """~2Today is a bad day.
          ~2There isn't any news to suggest that as such. In fact, it's more peaceful than usual.
@@ -151,72 +162,92 @@ def article_flip(item, ls):
     n = ['n', 'next', 'next']
     b = back
     while ans != b:
+        # Full article in light
         if ls == Lighting.LIGHT:
             item.print('\n' + news[item.count][1] + '\n\n' + news[item.count][2] + '\n')
+        # Abridged article in dim
         elif ls == Lighting.DIM:
             item.print(f"""It is a{news[item.count][0][0]} with the {news[item.count][0][1]}: {news[item.count][1]}.
             You'll need some more light to read all of it.""")
+        #Torch mode
         if torch.lightEmit and news[item.count][3]:
+            #First Experience TM
             if first['uv_news']:
                 item.print("""~4Oh.
         ~1The torchlight reveals something else written on the paper.3&""")
+                #Can't read, too bright
                 if ls != Lighting.DARK:
                     item.print("""A series of annotations, urgently scrawled out on its margins.2&
           The light is feeble, so you'll need to darken the room to see it more clearly.2&""")
                 first['uv_news'] = False
+            #Not first time
             elif ls != Lighting.DARK:
                 item.print("""The torchlight reveals something else written on the paper: a series of annotations, urgently scrawled out on its margins.
                    The light is feeble, so you'll need to darken the room to see it more clearly.""")
+            #Full article in torch-mode
             if ls == Lighting.DARK:
                 item.print('\n' + news[item.count][1] + '\n\n' + news[item.count][3] + '\n')
+        #WHAT IS THIS EVEN DOING HERE YOU SHOULDN'T BE HERE
         elif ls == Lighting.DARK:
             item.print('\n' + news[item.count][1] + '\n\n' + uvNothing + '\n')
+        #Move articles first
         if item.count == 0:
-            ans = multi(None, "(Type 'next' to move between articles. Type 'back' to return.) ", (b, n), None, True,
-                        False)
+            ans = multi(None, "(Type 'next' to move between articles. Type 'back' to return.) ", (b, n), try_again=None,
+                        original_result=True, tuples=False)
+        # Move articles last
         elif item.count == len(news)-1:
             if first['coin'] == 0:
                 first['coin'] = 1
-            ans = multi(None, "(Type 'previous' to move between articles. Type 'back' to return.) ", (b, p), None, True,
-                        False)
+            ans = multi(None, "(Type 'previous' to move between articles. Type 'back' to return.) ", (b, p),
+                        try_again=None, original_result=True, tuples=False)
+        # Move articles middle
         else:
             ans = multi(None, "(Type 'previous' or 'next' to move between articles. Type 'back' to return.) ",
-                        (b, p, n), None, True, False)
+                        (b, p, n), try_again=None, original_result=True, tuples=False)
         if ans == p:
             item.decrement()
         elif ans == n:
             item.increment()
+    #Coined the coin
     if first['coin'] == 1:
         item.print("""As you're rifling through the pages, a single coin falls to the table, spinning and rattling briefly as it comes to a stop near your fingertips.
     ~5You take the coin.1&""")
         player.add_inv(coin)
         first['coin'] = 2
 
-
+#Mayyybe do something about this repetition?
 def snack_describe(item, ls):
     from main import player, room
+    #Make list of all snacks in inv
     treats = []
     for items in player.inv:
         if items in player.snacks:
             treats.append(items)
+    #If no snacks
     if len(treats) == 0:
         item.print("You'll need to buy one first.")
+    #If yes snack
     elif len(treats) == 1:
         items.describe(room.get_lighting_status(player), room.get_uv_status(player))
+    #If yes snacks
     else:
         item.print("Which snack are you referring to?")
 
 
 def snack_use(item, ls):
     from main import player, room
+    # Make list of all snacks in inv
     treats = []
     for items in player.inv:
         if items in player.snacks:
             treats.append(items)
+    # If no snacks
     if len(treats) == 0:
         item.print("You'll need to buy one first.")
+    # If yes snack
     elif len(treats) == 1:
         items.use(player, room.get_lighting_status(player), room.get_uv_status(player))
+    # If yes snacks
     else:
         item.print("Which snack are you referring to?")
 
@@ -233,6 +264,7 @@ def end_vending():
     from main import room
     if first['machine'] == 1:
         first['machine'] = 2
+        #Start spider tick
         room.start_tick()
     vending_machine.count = 2
     room.add_room(room_coin)
@@ -241,24 +273,32 @@ def end_vending():
 def vending_use(item, ls):
     from game_objects import vending_machine, coin, room_coin, money_box, keypad, snack7, torch, coin_slot
     from main import player, room
+    #If describing box and coin not in room...naturally the coin is not in the box.
     if item == money_box and room_coin not in room.items:
         item.print('The money box is currently empty.')
         return
+    #If coin in vending machine/player doesn't know about the money box...
     elif vending_machine.count == 0 or first['machine'] == 2 or (
             item in [keypad, coin_slot] and vending_machine.count == 2):
+        #...and coin is not in inv...
         if coin not in player.inv:
+            #...AND player wants to use said coin, don't give it to them.
             if item == room_coin:
                 item.print("You don't have that with you right now.")
+            #Else respond with a flippant remark :o)
             else:
                 item.print("You'll need to insert a coin first.")
             return
+        #Else, well I guess everything works out then
         else:
             item.print('You insert the coin into the vending machine. The keypad glows up, faint as it may be.')
             player.remove_inv(coin)
+            #Pause for Emotional Reunion moment
             if first['machine'] == 0:
                 item.print("""~3...wow.
         ~2it...still works.2&""")
                 first['machine'] += 1
+            #Begin phase 1 ;)
             vending_machine.increment()
     if vending_machine.count == 1:
         while True:
@@ -267,9 +307,11 @@ def vending_use(item, ls):
                               ['004', '04', '4'], ['005', '05', '5'], ['006', '06', '6'],
                               ['007', '07', '7'], ['008', '08', '8'], ['009', '09', '9'],
                               ['216'],
-                              back), keypad_nope, False, False))
+                              back), try_again=keypad_nope, original_result=False, tuples=False))
+            #Back
             if code == 10:
                 return
+            #Torch code
             elif code == 9:
                 if torch not in player.inv:
                     item.print("""The vending machine whirs into action, then with a small clank, produces a single..
@@ -280,6 +322,7 @@ def vending_use(item, ls):
                     return
                 else:
                     item.print('This product is already sold out.')
+            #Sorting snacks
             else:
                 snack = player.snacks[int(code)]
                 if snack.inVend == 0:
@@ -287,6 +330,7 @@ def vending_use(item, ls):
                 else:
                     break
 
+        #Monster energy
         if snack == snack7:
             item.print(
                 f"The vending machine whirs into action, then with a small clank, produces a single {snack.names[0]}."
@@ -295,6 +339,7 @@ def vending_use(item, ls):
                 item.print("~2..Don't drink too much, ok?2&")
             elif snack7.inVend <= 3:
                 item.print('~2...1&')
+        #Everything else
         else:
             item.print(
                 f"The vending machine whirs into action, then with a small clank, produces a single packet of "
@@ -304,6 +349,7 @@ def vending_use(item, ls):
         if snack.inVend == 0:
             item.print('This product is now sold out.')
         end_vending()
+    #coin retrieved!
     else:
         item.print('You retrieve the gold coin from the money box.')
         room.remove_room(room_coin)
@@ -313,17 +359,19 @@ def vending_use(item, ls):
 
 def spider_use_again(item, ans):
     from events import SpiderName
-    item.print("{S} doesn't understand what you want.".format(S=SpiderName))
+    item.print("{S} doesn't understand your intentions.".format(S=SpiderName))
 
 
 def spider_kill(item):
     from game_objects import dead_spider, monster_energy_gun
     from main import room
+    #The killing
     item.print(
         "~3Yes you monster, you horribly slaughter the innocent creature by pounding into it with your Energy Gun over "
         "and over until it stops twitching, are you happy now?")
     room.remove_room(item)
     room.add_room(dead_spider)
+    #Character development for the gun
     monster_energy_gun.Description = same2("""...
   ~2You've..
   ~1...changed.2&""")
@@ -337,7 +385,23 @@ def theyit(string, plus):
         return string, f"{string} {plus} it", f"{string} {plus} them"
     return string, string + ' it', string + ' them'
 
+"""
+So if you type:
+    theyit('point at', None)
+It would return:
+    'point at', 'point at it', 'point at them'
+       ^
+But if you type:
+    theyit('point', 'at')
+It would return:
+    'point', 'point at it', 'point at them'
+       ^
 
+Small difference, goes a long way
+"""
+
+
+#Don't remove these, they are also used in game_objects ;)
 spiderStory = """~2Y'know.
     ~2There was a tiny, insignificant, foolish spider
     ~3who one day decided to climb a drainpipe.
@@ -359,11 +423,13 @@ spiderStory = """~2Y'know.
 
 spiderFace = "~2Stop making faces like that, you're scaring the spider.2&"
 
+
 def spider_use(item, ls):
     from game_objects import monster_energy_gun, snack9, dead_rat, spider
     from main import player, room
     from events import spiderName, SpiderName
     global bnc, spiderstatus
+    #Do be draggin that rat away--
     if room.tickActions == ratHunt_Tick:
         item.print('{S} is a bit preoccupied at the moment.'.format(S=SpiderName))
         return
@@ -372,8 +438,9 @@ def spider_use(item, ls):
                  [('fire', 'gun', 'fire gun', 'fire my gun')],
                  [theyit('feed', None)],
                  [('dance', 'song'), theyit('tame', None), theyit('train', None), theyit('command', None),
-                  theyit('order', None)],
+                  theyit('order', None), theyit('pressure', None), theyit('peer pressure', None)],
                  [theyit('name', None), theyit('rename', None)],
+
                  [('run')],
                  [('let it be', 'let be', 'let them be')],
                  [theyit('look', 'at'), theyit('observe', None), theyit('examine', None), theyit('inspect', None),
@@ -390,11 +457,13 @@ def spider_use(item, ls):
                  [theyit('flirt', 'with'), theyit('wink', 'at')],
                  [theyit('kiss', None), theyit('smooch', None), theyit('make out', 'with')],
                  [theyit('date', None), theyit('go out', 'with'), theyit('go on a date', 'with')],
-                 [theyit('speak', 'to'), theyit('speak', 'with'), theyit('talk', 'to'), theyit('chat', 'to'),
+                 [('story'), theyit('speak', 'to'), theyit('speak', 'with'), theyit('talk', 'to'), theyit('chat', 'to'),
                   theyit('chat', 'with'), theyit('gossip', 'with'), theyit('converse', 'with'),
                   theyit('communicate', 'with'), theyit('ask', None), theyit('deep talk', 'with')],
                  [theyit('tease', None), theyit('prank', None), theyit('trick', None), theyit('impress', None),
                   theyit('fool', None), theyit('dupe', None), theyit('entertain', None)],
+                 [theyit('pick on', None), theyit('annoy', None), theyit('irritate', None), theyit('hassle', None),
+                  theyit('pester', None)],
                  [theyit('eat', None), theyit('devour', None), theyit('consume', None), theyit('swallow', None),
                   theyit('chew', None), theyit('chew', 'on'), theyit('bite', None), theyit('munch', None),
                   theyit('munch', 'on'), theyit('cronch', None), theyit('cronch', 'on')],
@@ -403,13 +472,14 @@ def spider_use(item, ls):
                   theyit('assassinate', None)],
                  [theyit('harm', None), theyit('hurt', None), theyit('attack', None), theyit('hit', None),
                   theyit('squash', None), theyit('squish', None), theyit('kick', None), theyit('punch', None),
-                  theyit('throw', None), theyit('toss', None), theyit('stomp', None), theyit('betray', None),
-                  theyit('anger', None), theyit('laugh at', None), theyit('insult', None), theyit('deceive', None),
+                  theyit('throw', None), theyit('toss', None), theyit('stomp', None), theyit('maim', None),
+                  theyit('betray', None), theyit('anger', None), theyit('laugh at', None), theyit('insult', None),
+                  theyit('deceive', None), theyit('harass', None), theyit('lie', 'to'),
                   ('lie', 'make them cry', 'make it cry')],
                  [theyit('torture', None), theyit('torment', None), theyit('burn', None), theyit('bash', None),
                   theyit('smash', None), theyit('crush', None), theyit('stab', None), theyit('crunch', None)],
                  [theyit('manipulate', None), theyit('abuse', None), theyit('bully', None), theyit('traumatise', None),
-                  theyit('gaslight', None), theyit('gatekeep', None), theyit('girlboss', None),
+                  theyit('gaslight', None), theyit('gatekeep', None), theyit('girlboss', None), theyit('exploit', None),
                   theyit('threaten', None), theyit('terrify', None), theyit('horrify', None), theyit('petrify', None),
                   theyit('backstab', None), theyit('blackmail', None), theyit('gaslight gatekeep girlboss', None)],
                  [('nothing')],
@@ -417,26 +487,28 @@ def spider_use(item, ls):
                   theyit('perturb', None), theyit('unsettle', None), theyit('upset', None), theyit('disturb', None),
                   theyit('unnerve', None), theyit('disown', None), theyit('reject', None), theyit('renounce', None),
                   theyit('forsake', None)],
+                 [theyit('rob', None), theyit('steal', None)],
                  [theyit('scream', 'at'), theyit('shout', 'at'), theyit('shriek', 'at'), theyit('yell', 'at'),
                   theyit('spook', None), theyit('scare', None), theyit('alarm', None), theyit('frighten', None),
-                  theyit('startle', None), theyit('surprise', None), theyit('unnerve', None), theyit('trigger', None),
+                  theyit('startle', None), theyit('surprise', None), theyit('provoke', None), theyit('unnerve', None),
+                  theyit('trigger', None),
                   ('creep out', 'creep it out', 'creep them out', 'freak out', 'freak it out', 'freak them out')],
                  [theyit('smile', 'at'), theyit('grin', 'at'), theyit('beam', 'at'), theyit('leer', 'at'),
                   theyit('smirk', 'at'), theyit('sneer', 'at'), theyit('scowl', 'at'), theyit('pout', 'at'),
                   theyit('frown', 'at'), theyit('glare', 'at'), theyit('gaze', 'at'), theyit('stare', 'at'),
                   theyit('spy on', None), theyit('glower', 'at'), theyit('make faces', 'at'),
                   theyit('pull faces', 'at')]
-                 ), spider_use_again, False, True)
+                 ), try_again=spider_use_again, original_result=False, tuples=True)
     if ans == 0:
         return
-    elif ans == 1:
+    elif ans == 1: #fire gun
         if monster_energy_gun in player.inv:
             spider_kill(item)
         else:
             item.print("""...
       ~2ahaha
       ~1You don't even have a gun!3&""")
-    elif ans == 2:
+    elif ans == 2: #feed
         feed = input(f"What would you like to feed them? ")
         all_items = room.items + player.inv
         for item in all_items:
@@ -446,6 +518,8 @@ def spider_use(item, ls):
                      ~2If you prompt them enough, they might just break into a dance.2&""".format(s=spiderName))
                     bnc = True
                     return
+                if feed in player.snacks.names:
+                    item.print("This snack doesn't strike you as spider-friendly.")
                 if feed in dead_rat.names:
                     item.print("""~2Yes.
                      ~1It'll get to that in just a moment.2&""")
@@ -455,7 +529,7 @@ def spider_use(item, ls):
                     item.print("You're not sure if this is edible for the spider.")
                 return
         item.print("You don't have that with you.")
-    elif ans == 3:
+    elif ans == 3: #dance, train, command
         item.print("""You command {s} to dance.
     ~2They begin to dance...2&""".format(s=spiderName))
         if bnc:
@@ -465,7 +539,7 @@ def spider_use(item, ls):
         else:
             # playsound('spider_dance.mp3')
             spiderstatus = 'The arachnid sways erratically to the non-diegetic music.'
-    elif ans == 4:
+    elif ans == 4: #name
         if first['spider'] < 5:
             item.print("Not yet. You need to get to know them better first :)")
         else:
@@ -487,49 +561,54 @@ def spider_use(item, ls):
     else:
         spider_response = ['', '', '', '', '',
                            """No need to be afraid!
-    ~1They're just a spider after all...1&""",
-                           ':)',
+    ~1They're just a spider after all...1&""", #run
+                           ':)', #let be
                            """You exchange a knowing glance with {s}.
-    ~2swag.1&""",
+    ~2swag.1&""", #look, observe
                            """You pet {s}.
-    ~2Fluffy. It gives you an oddly comforting shiver down your spine.""",
+    ~2Fluffy. It gives you an oddly comforting shiver down your spine.""", #pet, touch
                            """You poke {s}.
-    ~2somft.1&""",
+    ~2somft.1&""",  #poke
                            """You hold {s} like a borger.
-    They wriggle in your grasp.""",
+    They wriggle in your grasp.""", #hold, pick up
                            """You hug {s}.
-    ~2{S} is stunned. They look up at you inquisitively.""",
+    ~2{S} is stunned. They look up at you inquisitively.""", #hug, love, care for
                            """You tickle {s}.
-    ~2{S} isn't impressed.1&""",
-                           "~1Can spiders blush?1&",
+    ~2{S} isn't impressed.1&""", #play with, befriend
+                           "~1Can spiders blush?1&", #flirt
                            """You give {s} a heartfelt kiss.
-    ~2Aww <33""",
-                           "As much as that is adorable, this is not a dating sim.",
-                           spiderStory,
+    ~2Aww <33""", #kiss
+                           "As much as that is adorable, this is not a dating sim.", #date
+                           spiderStory, #talk
                            """You show off to {s} with your well-practised disappearing thumb trick.
-    ~3{S}'s eyes visibly widen as they try to comprehend this phenomenon.2&""",
+    ~3{S}'s eyes visibly widen as they try to comprehend this phenomenon.2&""", #tease, trick, impress, entertain
+    """~1Oi!
+     ~1Stop stroking {s} the wrong way! 
+     ~2Rude :/""", #pick on, annoy
                            """~~~0.5I..um...
     ~1Please do not eat the spider.
     ~1There's literally a snack machine in front of you
-    ~2So Please don't do that, ok?1&""",
+    ~2So Please don't do that, ok?1&""", #eat
                            """...
     ~2What would you do that for?
-    ~~~1.5Why???""",
+    ~~~1.5Why???""", #kill
                            """~1No.
     ~1Why would a person like you do such a thing.
-    ~2Do not even think about it.""",
+    ~2Do not even think about it.""", #harm, betray
                            """~2aaaa
     ~2aaaaaaaaaaaa
     ~3AaaaAAAAAAAAaaaaAAAAAAAAAAAAAAAAAAAAAA...
-    ~5..don't you dare.2&""",
+    ~5..don't you dare.2&""", #torture
                            """...
-                           ~2You're scary.1&""",
-                           "~2You're boring.1&",
+                           ~2You're scary.1&""", #manipulate, terrify
+                           "~2You're boring.1&", #nothing
                            """...2&
-    mhm.~1""",
+    mhm.~1""", #ignore, disturb, disown
+    """You rob the spider of your attention. You're just too cool and too busy to get hang up on the matters of eight-legged insects.
+    ~6Hang on, are spiders insects?1&""", #rob
                            """Gahh!!!
-    ~1Stop making loud noises like that! >:(1&""",
-                           spiderFace
+    ~1Stop making loud noises like that! >:(1&""", #scream, freak out
+    spiderFace #smile, scowl, stare, pull faces
                            ]
         item.print(spider_response[ans].format(s=spiderName, S=SpiderName))
     return
@@ -538,6 +617,7 @@ def spider_use(item, ls):
 def can_use(self, ls):
     from game_objects import monster_energy_gun
     from main import player
+    #If enough cans, check for light, and build
     if self.count == 7:
         if ls == Lighting.DARK:
             self.print(needLight)
@@ -553,16 +633,19 @@ def can_use(self, ls):
       ~2...ehehehe
       ~2ahahahahaha...
       ~4Happy now?2&""")
+            #insta-remove all cans from inv, replace with gun
             self.count = 1
             player.remove_inv(self)
             player.add_inv(monster_energy_gun)
     else:
         self.print("This item is practically worthless now.")
+        # Just you wait, just you wait.
 
 
 def monster_use(item, ls):
     from game_objects import empty_can
     from main import player
+    #Count number of cans that have been used, print messages accordingly
     item.countAll += 1
     num = item.countAll
     if num == 1:
@@ -609,4 +692,5 @@ def monster_use(item, ls):
     ~2
     ~~~0.5Just please...
     ~4DON'T BLAME YOURSELF FOR THIS!!!!3&""")
+    #add can every time
     player.add_inv(empty_can)

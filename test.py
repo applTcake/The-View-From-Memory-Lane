@@ -21,3 +21,13 @@ test = Test(
     "Hi, I am counter {value.counter}, here is my dynamic description: {value.dynamicDescription}",
     makeDescription
 )
+
+
+def Print(text):
+    print(text.format(S='SSSS'))
+
+Print("Hi{S}")
+Print("Hey")
+
+
+

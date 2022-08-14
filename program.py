@@ -3,7 +3,8 @@ from events import *
 
 #start_game()
 #intro()
-#room.start_tick()
+#Below starts spider tick
+room.start_tick()
 while not end_game:
     room.tick()
     events()

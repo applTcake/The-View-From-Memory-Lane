@@ -5,6 +5,26 @@ from statuseffects import *
 
 first = {'match': True, 'candle': True, 'coin': 0, 'machine': 0,
          'snack': True, 'spider': 0, 'torch': True, 'rat': 0, 'uv_news': True}
+"""
+    match, candle, torch: toggled on for first time
+    coin:
+        1 - got to required article
+        2 - coin fell to table; player took it
+    machine:
+        1 - inserted coin (glowing keypad mode)
+        2 - item selected (looking for money box mode)
+        3 - recognised existence of money box
+        (Similar to vending_machine_count, except goes from 2 to 0 when coin retrieved)
+    snack: '..welcome home.'
+    spider:
+        1 - appeared on vending machine
+        2 - recognised existence of spider
+        3 - 
+        4 - described spider status
+        5 - befriended spider
+    rat:
+    uv_news:
+"""
 spiderstatus = '{S} scuttles around on top of the vending machine, disorientedly.'
 ratFocus = False
 spiderName, SpiderName = 'the spider', 'The spider'
@@ -19,6 +39,7 @@ def start_game():
     from util import Printer, yn
     from main import player
     title = 'THE VIEW FROM MEMORY LANE'
+    #screenWidth-1 if len(title) is an even number
     player.print('-' * (Printer.screenWidth - 1))
     num_breaks = int((Printer.screenWidth - 1 - len(title)) / 2)
     breaks = ('-' * num_breaks)
@@ -27,6 +48,7 @@ def start_game():
     player.print("""~2    an original puzzle text adventure.
   ~2
   (trigger warning: descriptions of gore, violence and death, spiders, rats and musophobia, isolation.)""")
+    #Start-of-game formalities
     if yn('Proceed? (yes/no) ') == 1:
         exit()
     player.controls()
@@ -37,11 +59,12 @@ def start_game():
 def intro():
     from main import player
     from util import Printer
+    #print five of these underscore thingys just because.
     for i in range(5):
         player.print('_0.2&&&')
     player.print("""are you quite dead yet?
     ~2cause it's so quiet in here.
-    ~2and all of your thoughts are rotting on the edges..
+    ~2and all of your thoughts are rotting at the edges..
     ~3...
     ~2it's not so bad, i admit.
     ~2but do you really think it will go that easily?
@@ -67,35 +90,47 @@ def intro():
   ~1What?""")
 
 
+#Checked each turn:
 def events():
     from game_objects import spider, spider_status
     from main import player, room
+    #Just in case to prevent it from ticking down further
     if room.counter == 0:
         room.stop_tick()
+    #Spider appear and turn the lights on = spider encounter
     if first['spider'] == 1 and player.get_lighting_status() != Lighting.DARK:
         player.print('~2There is a large furry spider before you!!')
         spider1()
         first['spider'] = 3
+    #
     elif first['spider'] == 2:
         first['spider'] = 3
+    #If phase 3, describe spider status
     elif first['spider'] == 3:
         spider_status(spider, player.get_lighting_status())
         first['spider'] = 4
+    #If ended spider tick or started bonus ticks and no rat encounters AND torch found. Initiate rattattack.
     if ((room.tickActions == spider1_Tick and room.counter == 0) or (
             room.tickActions == vibe_Tick and first['rat'] == 0)) and not first['torch']:
         room.tickActions = rat_Tick
         room.start_tick()
+    #If spider ticked once and ended, start bonus ticks
     elif room.tickActions == spider1_Tick and room.counter == 0 and first['machine'] >= 2:
         room.tickActions = vibe_Tick
         room.start_tick()
+    #
     if first['rat'] == 1:
         first['rat'] = 2
+    #If rat has traumatised sufficiently traumatised its victim.
     if room.tickActions == rat_Tick and room.counter == 0 and first['rat'] == 2:
+        #Spider aid
         if spider in room.items:
             room.tickActions = ratHunt_Tick
+        #The Alternative
         else:
             room.tickActions = ratAttack_Tick
         room.start_tick()
+    #If rat hunt is over, room isn't dark, the spider made it and still hasn't been befriended. BEFRIEND.
     if room.tickActions == ratHunt_Tick and room.counter == 0 and spider in room.items and \
             player.get_lighting_status() != Lighting.DARK and first['spider'] < 5:
         spider_friend()
@@ -125,16 +160,21 @@ def spider_tense(count):
     from main import player, room
     global spiderstatus
     ls = player.get_lighting_status()
+    #If tick has: (1) spider_tense, (2) visible spider status, (3) oblivious spider status:
     if len(count) == 3:
         spiderstatus = count[1]
         oblivious = count[2]
+        #If dark AND brushing past status or spider unrecognised, oblivious
         if ls == Lighting.DARK and (
                 oblivious == "~2Something furry brushes past your hand." or spider not in room.items):
             player.print(oblivious)
+        #Elif spider recognised, spider status
         elif spider in room.items:
             spider_status(spider, ls)
+            #Up a phase
             if first['spider'] == 2:
                 first['spider'] = 3
+    #Else, first spider_tense
     else:
         first['spider'] = 1
         if ls == Lighting.DARK:
@@ -152,13 +192,15 @@ def spider1():
     room.add_room(spider)
     first['spider'] = 2
     ans = multi(None, 'Do you run or fire your gun or let it be? ',
-                (['run'], ['fire', 'gun', 'fire gun', 'fire my gun'], ['let it be', 'let be']), None, False, False)
-    if ans == 0:
+                (['run'], ['fire', 'gun', 'fire gun', 'fire my gun'], ['let it be', 'let be']), try_again=None,
+                original_result=False, tuples=False)
+    if ans == 0: #run
         player.print("""Whoa there, no need for alarm.
     ~~~0.7It's probably harmless anyway.
     ~~~0.7A huntsman perhaps?
     ~1You looked it up on wikipedia once.1&""")
-    elif ans == 1:
+    elif ans == 1: #fire gun
+        #For those who've hacked the game...
         if monster_energy_gun in player.inv:
             spider_kill(spider)
             return
@@ -170,7 +212,7 @@ def spider1():
       ~1  we do what we must.
       ~3Fortunately you don't have a gun.
       ~1teehee0.5&&&""")
-    elif ans == 2:
+    elif ans == 2: #let be
         player.print("""~2That's a nice thought.
     ~3'Let it be.'2&""")
     player.print("Besides, you've always been quite fond of spiders.2&")
@@ -187,6 +229,7 @@ vibe_Tick = [None, None,
              None]
 
 
+#Changing spider status in the background-
 def spider_vibe(count):
     global spiderstatus
     spiderstatus = count[1]
@@ -259,15 +302,20 @@ def rat_tense(count):
     from game_objects import rat, spider
     from main import player, room
     global ratFocus
+    #If 3 messages, last of which implies spider dead
     if len(count) == 3:
+        #Print first message if spider is alive and well, otherwise...
         if spider in room.items:
             player.print(count[1])
         elif count[2] != '':
             player.print(count[2])
+    #Else, Rat Presence.
     else:
+        #RECOGNISE THE RAT.
         if rat not in room.items:
             room.add_room(rat)
             ratFocus = True
+        #
         elif first['rat'] == 1:
             first['rat'] = 2
             room.counter += 1
@@ -280,18 +328,24 @@ def rat_kill(count):
     from main import player, room
     global ratFocus, spiderstatus
     player.print(count[1].format(S=SpiderName))
+    #If spider is clearing the scene
     if len(count) == 3:
         if spider in room.items:
+            #First time, make message spider status
             if count[2] == '1':
                 spiderstatus = count[1]
+            #Second time, remove rat
             else:
                 room.remove_room(dead_rat)
+    #Else, the moment of killing
     else:
         ratFocus = False
         room.remove_room(rat)
         room.add_room(dead_rat)
+        #Spider cleaning service
         if spider in room.items:
             spiderstatus = "{S} carefully assesses their meal."
+        #Else, additional gun character development
         else:
             monster_energy_gun.Description = same2(""""...
       ~2I understand that you have been through...a lot.
@@ -307,12 +361,15 @@ def naming_ceremony(name):
     global SpiderName, spiderName
     spiderName = name
     SpiderName = spiderName
+    #If spider named spider, it's creative :)
     given_spider = spiderName.lower().rstrip()
     if given_spider in ['spider', 'the spider']:
         player.print('What a creative name!2&')
+    #Offically add name to spider list
     elif spiderName:
         spider.names.append(given_spider)
         dead_spider.names.append(given_spider)
+        #maybe insert instead?
 
 
 def spider_friend():
