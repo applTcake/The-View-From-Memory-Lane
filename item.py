@@ -87,6 +87,7 @@ class LightEmitter:
     def __init__(self, light_emit):
         self.lightEmit = light_emit
 
+
 # Room items
 class Item(Printer):
     def __init__(self, names, description, use):
@@ -119,6 +120,7 @@ class Item(Printer):
         else:
             self.print(f"You cannot use the {self.names[0]}.")
 
+
 # (Special) room items that display a message when looking around room
 class ItemRoom(Item):
     def __init__(self, names, room_description, description, use_description):
@@ -134,17 +136,27 @@ class ItemRoom(Item):
         else:
             display_item(self, self.roomDescription[0], light_status)
 
+
+#Special, room items with additional naming options
+class ItemSpider(ItemRoom):
+    def __init__(self, names, nickname, status, description, use_description):
+        ItemRoom.__init__(self, names, status, description, use_description)
+        self.nickname = nickname
+
+
 # Special, light-emitting room items
 class ItemCandle(ItemRoom, LightEmitter):
     def __init__(self, names, room_description, description, use_description, light_emit):
         ItemRoom.__init__(self, names, room_description, description, use_description)
         LightEmitter.__init__(self, light_emit)
 
+
 # Special, stackable room items
 class ItemRoomStack(ItemRoom, Stack):
     def __init__(self, names, room_description, description, use_description, count):
         ItemRoom.__init__(self, names, room_description, description, use_description)
         Stack.__init__(self, count)
+
 
 # Special, stackable AND tickable room items. smh who even uses this
 class ItemRoomStackTick(ItemRoom, Stack, Tickable):
@@ -153,11 +165,13 @@ class ItemRoomStackTick(ItemRoom, Stack, Tickable):
         Stack.__init__(self, count)
         Tickable.__init__(self, tick_actions)
 
+
 # Special tickable room items that NO ONE USES
 class ItemRoomTick(ItemRoom, Tickable):
     def __init__(self, names, room_description, description, use_description, tick_actions):
         ItemRoom.__init__(self, names, room_description, description, use_description)
         Tickable.__init__(self, tick_actions)
+
 
 # Light-emitting inv items
 class InvTorch(Item, LightEmitter):
@@ -165,11 +179,13 @@ class InvTorch(Item, LightEmitter):
         Item.__init__(self, names, description, use_description)
         LightEmitter.__init__(self, light_emit)
 
+
 # Stackable inv items
 class InvStack(Item, Stack):
     def __init__(self, names, description, use_description, count):
         Item.__init__(self, names, description, use_description)
         Stack.__init__(self, count)
+
 
 # Light-emitting stackable inv items
 class InvMatches(InvStack, LightEmitter, Tickable):
@@ -177,6 +193,7 @@ class InvMatches(InvStack, LightEmitter, Tickable):
         InvStack.__init__(self, names, description, use_description, count)
         LightEmitter.__init__(self, light_emit)
         Tickable.__init__(self, tick_actions)
+
 
 # Snacks. Gosh finally something legible.
 class InvSnack(InvStack):
@@ -198,6 +215,7 @@ class InvSnack(InvStack):
             if first['snack']:
                 self.print('~3..welcome home.2&')
                 first['snack'] = False
+
 
 # extra extra spicy candy ;P
 class SpecialSnack(InvSnack):

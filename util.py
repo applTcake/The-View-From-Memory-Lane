@@ -48,8 +48,6 @@ class Printer:
         #prints text within screenWidth
         print(tr.fill(text, width=self.screenWidth))
 
-    #Maybe print .format(S=SpiderName, s=spiderName) here?
-
 
     def controls(self):
         self.print("""

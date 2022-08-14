@@ -359,7 +359,7 @@ def vending_use(item, ls):
 
 def spider_use_again(item, ans):
     from events import SpiderName
-    item.print("{S} doesn't understand your intentions.".format(S=SpiderName))
+    item.print(f"{spider.nickname[1]} doesn't understand your intentions.")
 
 
 def spider_kill(item):
@@ -431,9 +431,9 @@ def spider_use(item, ls):
     global bnc, spiderstatus
     #Do be draggin that rat away--
     if room.tickActions == ratHunt_Tick:
-        item.print('{S} is a bit preoccupied at the moment.'.format(S=SpiderName))
+        item.print(f'{spider.nickname[1]} is a bit preoccupied at the moment.')
         return
-    ans = multi(item, "What would you like to do with {s}? ".format(s=spiderName),
+    ans = multi(item, f"What would you like to do with {spider.nickname[0]}? ",
                 ([back, theyit('leave', None)],
                  [('fire', 'gun', 'fire gun', 'fire my gun')],
                  [theyit('feed', None)],
@@ -514,8 +514,8 @@ def spider_use(item, ls):
         for item in all_items:
             if feed in item.names:
                 if feed in snack9.names:
-                    item.print("""You feed {s} a packet of Berries and Cream.
-                     ~2If you prompt them enough, they might just break into a dance.2&""".format(s=spiderName))
+                    item.print(f"""You feed {spider.nickname[0]} a packet of Berries and Cream.
+                     ~2If you prompt them enough, they might just break into a dance.2&""")
                     bnc = True
                     return
                 if feed in player.snacks.names:
@@ -530,11 +530,11 @@ def spider_use(item, ls):
                 return
         item.print("You don't have that with you.")
     elif ans == 3: #dance, train, command
-        item.print("""You command {s} to dance.
-    ~2They begin to dance...2&""".format(s=spiderName))
+        item.print(f"""You command {spider.nickname[0]} to dance.
+    ~2They begin to dance...2&""")
         if bnc:
             # playsound('little_lad_dance.mp3')
-            spiderstatus = '{S} is doing the Little Lad Dance :))'
+            spiderstatus = f'{spider.nickname[1]} is doing the Little Lad Dance :))'
             bnc = False
         else:
             # playsound('spider_dance.mp3')
@@ -548,14 +548,14 @@ def spider_use(item, ls):
             if name:
                 naming_ceremony(name)
                 if name == spiderName:
-                    item.print("{S} will continue to be referred to as {s}.".format(s=spiderName, S=SpiderName))
+                    item.print(f"{spider.nickname[1]} will continue to be referred to as {spider.nickname[0]}.")
                 else:
-                    item.print("{S} will now be referred to as ".format(S=SpiderName) + name + ".")
+                    item.print(f"{spider.nickname[1]} will now be referred to as " + name + ".")
             else:
                 if SpiderName != spiderName:
-                    item.print("{S} will continue to be referred simply as '{s}'.".format(s=spiderName, S=SpiderName))
+                    item.print(f"{spider.nickname[1]} will continue to be referred simply as '{spider.nickname[0]}'.")
                 else:
-                    item.print("{S} will simply be referred to as 'the spider' from now on.".format(S=SpiderName))
+                    item.print(f"{spider.nickname[1]} will simply be referred to as 'the spider' from now on.")
                 default_spider()
 
     else:
@@ -563,27 +563,27 @@ def spider_use(item, ls):
                            """No need to be afraid!
     ~1They're just a spider after all...1&""", #run
                            ':)', #let be
-                           """You exchange a knowing glance with {s}.
+                           f"""You exchange a knowing glance with {spider.nickname[0]}.
     ~2swag.1&""", #look, observe
-                           """You pet {s}.
+                           f"""You pet {spider.nickname[0]}.
     ~2Fluffy. It gives you an oddly comforting shiver down your spine.""", #pet, touch
-                           """You poke {s}.
+                           f"""You poke {spider.nickname[0]}.
     ~2somft.1&""",  #poke
-                           """You hold {s} like a borger.
+                           f"""You hold {spider.nickname[0]} like a borger.
     They wriggle in your grasp.""", #hold, pick up
-                           """You hug {s}.
-    ~2{S} is stunned. They look up at you inquisitively.""", #hug, love, care for
-                           """You tickle {s}.
-    ~2{S} isn't impressed.1&""", #play with, befriend
+                           f"""You hug {spider.nickname[0]}.
+    ~2{spider.nickname[1]} is stunned. They look up at you inquisitively.""", #hug, love, care for
+                           f"""You tickle {spider.nickname[0]}.
+    ~2{spider.nickname[1]} isn't impressed.1&""", #play with, befriend
                            "~1Can spiders blush?1&", #flirt
-                           """You give {s} a heartfelt kiss.
+                           f"""You give {spider.nickname[0]} a heartfelt kiss.
     ~2Aww <33""", #kiss
                            "As much as that is adorable, this is not a dating sim.", #date
                            spiderStory, #talk
-                           """You show off to {s} with your well-practised disappearing thumb trick.
-    ~3{S}'s eyes visibly widen as they try to comprehend this phenomenon.2&""", #tease, trick, impress, entertain
-    """~1Oi!
-     ~1Stop stroking {s} the wrong way! 
+                           f"""You show off to {spider.nickname[0]} with your well-practised disappearing thumb trick.
+    ~3{spider.nickname[1]}'s eyes visibly widen as they try to comprehend this phenomenon.2&""", #tease, trick, impress, entertain
+    f"""~1Oi!
+     ~1Stop stroking {spider.nickname[0]} the wrong way! 
      ~2Rude :/""", #pick on, annoy
                            """~~~0.5I..um...
     ~1Please do not eat the spider.
@@ -610,7 +610,7 @@ def spider_use(item, ls):
     ~1Stop making loud noises like that! >:(1&""", #scream, freak out
     spiderFace #smile, scowl, stare, pull faces
                            ]
-        item.print(spider_response[ans].format(s=spiderName, S=SpiderName))
+        item.print(spider_response[ans])
     return
 
 

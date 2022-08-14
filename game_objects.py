@@ -255,22 +255,20 @@ room_coin = Item(
 
 
 def spider_status(item, ls):
-    from events import spiderstatus, spiderName, SpiderName
-    item.print(spiderstatus.format(S=SpiderName, s=spiderName))
+    #from events import spiderstatus, spiderName, SpiderName
+    #item.print(spiderstatus.format(S=SpiderName, s=spiderName))
+    item.print(f'{spider.nickname[1]} scuttles around on top of the vending machine, disorientedly.')
 
 
 def spider_describe(item, ls):
-    from events import SpiderName
     spider_status(item, ls)
-    item.print("""{S} is hairy with huge protruding legs.
-  A huntsman perhaps?""".format(S=SpiderName))
+    item.print(f"""{spider.nickname[1]} is hairy with huge protruding legs.
+  A huntsman perhaps?""")
     if ls == Lighting.LIGHT:
         item.print("You also think they're a huntsman because of the lack of cobwebs around.")
 
-
-spider = ItemRoom(
-    ['spider'], [spider_status], [spider_describe], [spider_use])
-
+spider = ItemSpider(
+    ['spider'], ['the spider', 'The spider'], [spider_status], [spider_describe], [spider_use])
 
 # Inventory
 def matches_description_dark(item, ls):
