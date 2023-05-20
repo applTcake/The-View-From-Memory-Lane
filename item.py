@@ -1,11 +1,11 @@
 from util import *
+from object_use import spider_use
 
 tooDark = "It's too dark to see."
 Rummage = "You rummage through the gloom to no avail."
 uvNothing = 'The torchlight reveals nothing unusual.'
 cantMove = "You find yourself unable to move."
 obscureVision = "The rat obscures your vision."
-
 
 def display_item(item, action, ls):
     if isinstance(action, str):
@@ -222,3 +222,4 @@ class SpecialSnack(InvSnack):
     def __init__(self, names, description, use_description, count, count_all, in_vend):
         InvSnack.__init__(self, names, description, use_description, count, in_vend)
         self.countAll = count_all
+

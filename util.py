@@ -84,6 +84,7 @@ class Tickable(Printer):
         self.counter = 0
 
     def tick(self):
+        from game_objects import spider
         #If counter above 0 (ticking), take value from list index
         if self.counter > 0:
             tock = self.tickActions[len(self.tickActions) - self.counter]
@@ -92,6 +93,12 @@ class Tickable(Printer):
                 #...AND it is a string...
                 if isinstance(tock, str):
                     #...AND tock is split into sections, first part is a function
+
+                    if 'SP1' in tock:
+                        tock = tock.replace("SP1", spider.nickname[1])
+                    if 'SP0' in tock:
+                        tock = tock.replace("SP0", spider.nickname[2])
+
                     if '/' in tock:
                         text = tock.split('/')
                         eval(text[0] + f"({text})")

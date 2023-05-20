@@ -1,12 +1,8 @@
 from util import *
 from statuseffects import *
-from game_objects import spider
 
-# from playsound import playsound
-
-
-first = {'match': False, 'candle': False, 'coin': 0, 'machine': 0,
-         'snack': True, 'spider': 5, 'torch': True, 'rat': 0, 'uv_news': True}
+first = {'match': True, 'candle': True, 'coin': 0, 'machine': 0,
+         'snack': True, 'spider': 0, 'torch': True, 'rat': 0, 'uv_news': True}
 """
     match, candle, torch: toggled on for first time
     coin:
@@ -58,12 +54,13 @@ def intro():
     #print five of these underscore thingys just because.
     for i in range(5):
         player.print('_0.2&&&')
-    player.print("""are you quite dead yet?
+    player.print("""are you dead yet?
     ~2cause it's so quiet in here.
-    ~2and all of your thoughts are rotting at the edges..
+    ~2and all of your thoughts are rotting away at the edges..
     ~3...
     ~2it's not so bad, i admit.
-    ~2but do you really think it will go that easily?
+    ~2and maybe it can be a comfort.
+    ~3but do you really think you can go that easily?
     ~4hehehe
     ~2ahahahahaha..
     ~2
@@ -84,7 +81,6 @@ def intro():
   ~1You can't see a thing in here
   ~1It's too dark
   ~1What?""")
-
 
 #Checked each turn:
 def events():
@@ -140,14 +136,14 @@ spider1_Tick = [
     None, None, None,
     'spider_tense/',
     None, None,
-    f"spider_tense/{spider.nickname[1]} deftly climbs down the vending machine. Their limbs are moving rapidly./"
+    f"spider_tense/SP1 deftly climbs down the vending machine. Their limbs are moving rapidly./"
     "~~~1.5Tink tink tink",
     None, None, None,
-    f"spider_tense/{spider.nickname[1]} has successfully climbed down the vending machine./~~~1.5stook.",
+    f"spider_tense/SP1 has successfully climbed down the vending machine./~~~1.5stook.",
     None, None, None,
-    f"spider_tense/{spider.nickname[1]} is stalking across the newspapers./~2flip flip...  flitflitflit.",
+    f"spider_tense/SP1 is stalking across the newspapers./~2flip flip...  flitflitflit.",
     None, None, None,
-    f"spider_tense/{spider.nickname[1]} approaches you./~2Something furry brushes past your hand."
+    f"spider_tense/SP1 approaches you./~2Something furry brushes past your hand."
 ]
 
 
@@ -215,13 +211,13 @@ def spider1():
 
 
 vibe_Tick = [None, None,
-             f'spider_vibe/{spider.nickname[1]} is striding around the candlestick.',
+             f'spider_vibe/SP1 is striding around the candlestick.',
              None, None, None,
-             f'spider_vibe/{spider.nickname[1]} is crawling on the vending machine.',
+             f'spider_vibe/SP1 is crawling on the vending machine.',
              None, None, None,
-             f'spider_vibe/{spider.nickname[1]} is stalking across the newspapers.',
+             f'spider_vibe/SP1 is stalking across the newspapers.',
              None, None, None,
-             f'spider_vibe/{spider.nickname[1]} approaches you.',
+             f'spider_vibe/SP1 approaches you.',
              None]
 
 
@@ -263,7 +259,7 @@ rat_Tick = [
 ]
 
 ratHunt_Tick = [
-    f"""rat_kill/{spider.nickname[1]} pounces on the rat!!
+    f"""rat_kill/SP1 pounces on the rat!!
   ~2With one swift movement, they sink their fangs into the rat's saggy neck.
   ~4The rat squirms in silent defiance for a few seconds, before its body goes slack.
   ~4Eyes glazed over.
@@ -271,7 +267,7 @@ ratHunt_Tick = [
   ~2...
   ~2You love spiders.2&""",
     None, None,
-    f"rat_kill/{spider.nickname[1]} is dragging the rat's limp body away./1",
+    f"rat_kill/SP1 is dragging the rat's limp body away./1",
     None, None, None,
     "rat_kill/The rat has been dragged out of view./2",
     None, None, None
@@ -373,13 +369,13 @@ def spider_friend():
     name = input('What will you name them? ')
     if name:
         naming_ceremony(name)
-        player.print(f"{spider.nickname[1]} is scuttling about in excitement.2&")
+        player.print(f"SP1 is scuttling about in excitement.2&")
     else:
-        player.print(f"""Don't want to take away {spider.nickname[0]}'s right to choose their own name I see?
-    ~3{spider.nickname[1]} appears pleased with your humanitarian ways.2&""")
+        player.print(f"""Don't want to take away SP1's right to choose their own name I see?
+    ~3SP1 appears pleased with your humanitarian ways.2&""")
     player.print('They advance towards your hand, staring up at you with a hungry, fervent gaze.5&')
-    if yn(f'Let {spider.nickname[0]} onto your palm? (yessir/nah bruv) ') == 0:
-        player.print(f"""{spider.nickname[1]} steps gingerly onto your right hand with their angular legs.
+    if yn(f'Let SP0 onto your palm? (yessir/nah bruv) ') == 0:
+        player.print(f"""SP1 steps gingerly onto your right hand with their angular legs.
     ~3First your middle finger, then your pinky, skittering towards the creases of your palm.
     ~4Then, slowly and tenderly, they sink their fangs into your wrist.
     ~6It tickles.
@@ -387,6 +383,6 @@ def spider_friend():
     ~3... huh.
     ~3It's been such an awfully long time since you've have physical contact with anyone...4&""")
     else:
-        player.print(f'{spider.nickname[1]} respects your personal space.2&')
+        player.print(f'SP1 respects your personal space.2&')
     player.print('Right. Back to work.')
     first['spider'] = 5

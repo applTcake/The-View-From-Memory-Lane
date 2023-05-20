@@ -3,7 +3,6 @@ from item import *
 
 end_game = False
 
-
 class Command:
     def __init__(self, command, argument):
         self.command = command
@@ -251,9 +250,9 @@ room = Room(light="You are sitting before a wooden table.",
 
 #Room items
 room.items = [arms, candle, chair, coin_slot, display_case, ears, face, head, keypad, legs, me, mescellaneous, mouth,
-              articles, nose, snack, table, vending_machine, you, spider]
+              articles, nose, snack, table, stuff, vending_machine, you]
 #Potential room items
-room.hidden = [dead_rat, dead_spider, money_box, project, rat, room_coin]
+room.hidden = [dead_rat, dead_spider, money_box, project, rat, room_coin, spider]
 
 player = Player([])
 

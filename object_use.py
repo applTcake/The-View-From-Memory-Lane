@@ -1,8 +1,12 @@
 from game_objects import *
 from util import *
+import winsound
 
 bnc = False
 back = ['b', 'back', 'return', 'escape', 'esc']
+
+spidey_dance = r"C:\Users\ariel\ye got games on your phone\TextAdventure\resources\spider_dance.wav"
+lil_lad = r"C:\Users\ariel\ye got games on your phone\TextAdventure\resources\lil_lad_dance.wav"
 
 #The Calm Message + potential loss of innocence
 def ease_to_dark():
@@ -358,7 +362,7 @@ def vending_use(item, ls):
 
 
 def spider_use_again(item, ans):
-    from events import SpiderName
+    from game_objects import spider
     item.print(f"{spider.nickname[1]} doesn't understand your intentions.")
 
 
@@ -427,7 +431,7 @@ spiderFace = "~2Stop making faces like that, you're scaring the spider.2&"
 def spider_use(item, ls):
     from game_objects import monster_energy_gun, snack9, dead_rat, spider
     from main import player, room
-    from events import spiderName, SpiderName
+    #from events import spiderName, SpiderName
     global bnc, spiderstatus
     #Do be draggin that rat away--
     if room.tickActions == ratHunt_Tick:
@@ -533,11 +537,11 @@ def spider_use(item, ls):
         item.print(f"""You command {spider.nickname[0]} to dance.
     ~2They begin to dance...2&""")
         if bnc:
-            # playsound('little_lad_dance.mp3')
+            winsound.Playsound(lil_lad, winsound.SND_ASYNC)
             spiderstatus = f'{spider.nickname[1]} is doing the Little Lad Dance :))'
             bnc = False
         else:
-            # playsound('spider_dance.mp3')
+            winsound.Playsound(spidey_dance, winsound.SND_ASYNC)
             spiderstatus = 'The arachnid sways erratically to the non-diegetic music.'
     elif ans == 4: #name
         if first['spider'] < 5:
@@ -547,16 +551,16 @@ def spider_use(item, ls):
             spider.names = ['spider']
             if name:
                 naming_ceremony(name)
-                if name == spiderName:
+                if name == spider.nickname[0]:
                     item.print(f"{spider.nickname[1]} will continue to be referred to as {spider.nickname[0]}.")
                 else:
                     item.print(f"{spider.nickname[1]} will now be referred to as " + name + ".")
             else:
-                if SpiderName != spiderName:
+                if spider.nickname[1] != spider.nickname[0]:
                     item.print(f"{spider.nickname[1]} will continue to be referred simply as '{spider.nickname[0]}'.")
                 else:
                     item.print(f"{spider.nickname[1]} will simply be referred to as 'the spider' from now on.")
-                default_spider()
+                #default_spider()
 
     else:
         spider_response = ['', '', '', '', '',
@@ -612,7 +616,6 @@ def spider_use(item, ls):
                            ]
         item.print(spider_response[ans])
     return
-
 
 def can_use(self, ls):
     from game_objects import monster_energy_gun

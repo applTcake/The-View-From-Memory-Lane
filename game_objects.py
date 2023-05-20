@@ -74,6 +74,7 @@ ears = Item(['ear', 'ears'], same2(meDescribe), same2(earTwitch))
 
 def make_face(item, ls):
     from main import room
+    from events import spider
     if spider in room.items:
         item.print(spiderFace)
     else:
@@ -100,6 +101,7 @@ mescellaneous = Item(['shoulders'], [meDescribe], same2("For what?"))
 
 def chat(item, ls):
     from main import room
+    from events import spider
     if spider in room.items:
         item.print('You try talking to the spider.2&')
         item.print(spiderStory)
@@ -134,6 +136,10 @@ table = Item(
     ["It's an old, sturdy, wooden table. A layer of dust covers its surface."],
     ["The table is too heavy to move."])
 
+stuff = Item(
+    ['stuff', 'thing', 'things', 'object', 'objects', 'item', 'items'],
+    ["How specific."],
+    ["What would you like to interact with?"])
 
 def money_box_status(item, ls):
     from main import player
