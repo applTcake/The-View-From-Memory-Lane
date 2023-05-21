@@ -312,6 +312,7 @@ def matches_description_light(item, ls):
 
 def matches_burnt():
     from main import player
+    audio.sound('match_sizzle')
     player.print("""The flame of the match travels down the stick, nearly burning your fingers.
   You instinctively drop the matchstick onto the ground and stamp it out with your foot.""")
     matches.stop_tick()

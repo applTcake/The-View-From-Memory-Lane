@@ -1,17 +1,15 @@
 from game_objects import *
 from util import *
-import winsound
+import audio
 
 bnc = False
 back = ['b', 'back', 'return', 'escape', 'esc']
-
-spidey_dance = r"C:\Users\ariel\ye got games on your phone\TextAdventure\resources\spider_dance.wav"
-lil_lad = r"C:\Users\ariel\ye got games on your phone\TextAdventure\resources\lil_lad_dance.wav"
 
 #The Calm Message + potential loss of innocence
 def ease_to_dark():
     from main import player
     from game_objects import torch
+    audio.sound('flame_blow')
     if player.get_lighting_status() == Lighting.DARK:
         player.print("You're welcomed once more into a realm of merciful darkness.")
         if torch.lightEmit and first['torch']:
@@ -30,6 +28,7 @@ def matches_use(item, ls):
         item.print("You don't have any matches left to light.")
     #Otherwise, match can be struck
     else:
+        audio.sound('light_match')
         if ls == Lighting.DARK:
             item.print('You strike a match. You start to discern some things in front of you.')
             if first['match']:
@@ -37,7 +36,7 @@ def matches_use(item, ls):
                 first['match'] = False
         #In light or dim lighting
         else:
-            item.print("You strike another match. The room is already bright enough to see because of the candle.")
+            item.print("You strike another match. The room is already bright enough to see because of the candle.2&")
         item.decrement()
         item.start_tick()
         item.lightEmit = True
@@ -57,6 +56,7 @@ def candle_use(item, ls):
         else:
             item.print('The fire returns to the candle, with the vigour of a starved traveller drinking from an oasis.')
         #Blow out match, stop tick
+        audio.sound('flame_blow')
         item.print("You blow out the match.")
         matches.stop_tick()
         matches.LightEmit = False
@@ -64,6 +64,7 @@ def candle_use(item, ls):
     #Toggle off
     else:
         if yn('Blow out candle? (yup/nup) ') == 0:
+            audio.sound('flame_blow')
             item.print('You swear the flame gives out a scream as you snuff it out with ease.2&')
             item.lightEmit = False
             ease_to_dark()
@@ -537,11 +538,11 @@ def spider_use(item, ls):
         item.print(f"""You command {spider.nickname[0]} to dance.
     ~2They begin to dance...2&""")
         if bnc:
-            winsound.Playsound(lil_lad, winsound.SND_ASYNC)
+            audio.sound('lil_lad_dance')
             spiderstatus = f'{spider.nickname[1]} is doing the Little Lad Dance :))'
             bnc = False
         else:
-            winsound.Playsound(spidey_dance, winsound.SND_ASYNC)
+            audio.sound('spider_dance')
             spiderstatus = 'The arachnid sways erratically to the non-diegetic music.'
     elif ans == 4: #name
         if first['spider'] < 5:
