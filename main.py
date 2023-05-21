@@ -246,7 +246,7 @@ room = Room(light="You are sitting before a wooden table.",
             "your face.",
             uv="You can discern very little other than the bluish purple gleam of the torch. You'll need to examine "
             "closer if you want to discover anything with it.",
-            lighting_status=Lighting.DARK, uv_status=False, tick_actions=spider1_Tick)
+            lighting_status=Lighting.DARK, uv_status=False, tick_actions=rat_Tick)
 
 #Room items
 room.items = [arms, candle, chair, coin_slot, display_case, ears, face, head, keypad, legs, me, mescellaneous, mouth,

@@ -1,5 +1,6 @@
 from util import *
 from statuseffects import *
+import audio
 
 first = {'match': True, 'candle': True, 'coin': 0, 'machine': 0,
          'snack': True, 'spider': 0, 'torch': True, 'rat': 0, 'uv_news': True}
@@ -303,6 +304,7 @@ def rat_tense(count):
             player.print(count[2])
     #Else, Rat Presence.
     else:
+        audio.loop('4280_pitch')
         #RECOGNISE THE RAT.
         if rat not in room.items:
             room.add_room(rat)
@@ -316,9 +318,10 @@ def rat_tense(count):
 
 
 def rat_kill(count):
-    from game_objects import dead_rat, rat, spider, monster_energy_gun
+    from game_objects import dead_rat, rat, spider, monster_energy_gun, same2
     from main import player, room
     global ratFocus, spiderstatus
+    audio.winsound.PlaySound(None, 0)
     player.print(count[1])
     #If spider is clearing the scene
     if len(count) == 3:

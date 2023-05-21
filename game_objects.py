@@ -137,7 +137,7 @@ table = Item(
     ["The table is too heavy to move."])
 
 stuff = Item(
-    ['stuff', 'thing', 'things', 'object', 'objects', 'item', 'items'],
+    ['stuff', 'thing', 'things', 'object', 'objects', 'item', 'items', 'something'],
     ["How specific."],
     ["What would you like to interact with?"])
 

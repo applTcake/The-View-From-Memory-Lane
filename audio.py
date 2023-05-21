@@ -21,12 +21,7 @@ def loop(text):
     file_path = file_path_front + text + file_path_back
     winsound.PlaySound(file_path, winsound.SND_LOOP + winsound.SND_ASYNC)
 
-
+# call coin effect 'coin_drop'
 def music(ls, uv):
     from statuseffects import Lighting
     from game_objects import matches
-    if last_round_lighting == ls:
-        if ls == Lighting.DARK:
-            loop('quiet')
-    if matches.lightEmit:
-        loop('match_back')

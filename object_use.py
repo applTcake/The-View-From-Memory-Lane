@@ -9,7 +9,6 @@ back = ['b', 'back', 'return', 'escape', 'esc']
 def ease_to_dark():
     from main import player
     from game_objects import torch
-    audio.sound('flame_blow')
     if player.get_lighting_status() == Lighting.DARK:
         player.print("You're welcomed once more into a realm of merciful darkness.")
         if torch.lightEmit and first['torch']:
@@ -22,6 +21,7 @@ def matches_use(item, ls):
         if yn("Blow out matchstick? (yep/nope) ") == 0:
             item.stop_tick()
             item.lightEmit = False
+            audio.sound('flame_blow')
             ease_to_dark()
     #No matches ;-;
     elif item.count == 0:
@@ -36,7 +36,7 @@ def matches_use(item, ls):
                 first['match'] = False
         #In light or dim lighting
         else:
-            item.print("You strike another match. The room is already bright enough to see because of the candle.2&")
+            item.print("You strike another match. The room is already bright enough to see because of the candle.")
         item.decrement()
         item.start_tick()
         item.lightEmit = True
@@ -48,6 +48,7 @@ def candle_use(item, ls):
     if ls == Lighting.DIM:
         #First time
         if first['candle']:
+            audio.sound('flame_crackle')
             item.print("""As you transfer the flame of the match to the candle, you are taken aback by how vibrantly the wick blazes up.
       ~3It is as though the candle has been aching for this precise moment for a very, very long time.
       ~4The brightness hurts your eyes a little, as the dancing light illuminates your vicinity with greater clarity.4&""")
@@ -215,6 +216,7 @@ def article_flip(item, ls):
             item.increment()
     #Coined the coin
     if first['coin'] == 1:
+        audio.sound('coin_drop')
         item.print("""As you're rifling through the pages, a single coin falls to the table, spinning and rattling briefly as it comes to a stop near your fingertips.
     ~5You take the coin.1&""")
         player.add_inv(coin)
@@ -296,6 +298,7 @@ def vending_use(item, ls):
             return
         #Else, well I guess everything works out then
         else:
+            audio.sound('vending_in')
             item.print('You insert the coin into the vending machine. The keypad glows up, faint as it may be.')
             player.remove_inv(coin)
             #Pause for Emotional Reunion moment
@@ -319,6 +322,7 @@ def vending_use(item, ls):
             #Torch code
             elif code == 9:
                 if torch not in player.inv:
+                    audio.sound('vending_out')
                     item.print("""The vending machine whirs into action, then with a small clank, produces a single..
           ~4...torch.
           ~2You take it with you.1&""")
@@ -337,6 +341,7 @@ def vending_use(item, ls):
 
         #Monster energy
         if snack == snack7:
+            audio.sound('vending_out')
             item.print(
                 f"The vending machine whirs into action, then with a small clank, produces a single {snack.names[0]}."
                 f" You take it.")
@@ -346,6 +351,7 @@ def vending_use(item, ls):
                 item.print('~2...1&')
         #Everything else
         else:
+            audio.sound('vending_out')
             item.print(
                 f"The vending machine whirs into action, then with a small clank, produces a single packet of "
                 f"{snack.names[0]}. You take the snack.")
