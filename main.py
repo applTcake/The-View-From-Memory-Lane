@@ -16,8 +16,9 @@ class ActionType(Enum):
     INVENTORY = 3
     EXIT = 4
     HELP = 5
-    IGNORED = 6
-    INVALID = 7
+    SETTINGS = 6
+    IGNORED = 7
+    INVALID = 8
 
 
 inv = ['i', 'inv', 'inventory', 'storage']
@@ -55,6 +56,8 @@ class CommandParser(Printer):
             action = ActionType.EXIT
         elif action_name in ['help', 'h', 'controls', 'ctrls', 'ctrl', 'c', 'rules']:
             action = ActionType.HELP
+        elif action_name in ['settings', 'options']:
+            action = ActionType.SETTINGS
         else:
             action = ActionType.INVALID
         return Command(action, argument)
@@ -142,6 +145,8 @@ class Player(Printer):
                 self.print('You currently have: ' + ', '.join(invlist) + '.')
         elif command == ActionType.HELP:
             self.controls()
+        elif command == ActionType.SETTINGS:
+            self.settings()
         elif command == ActionType.EXIT:
             if yn('Quit game? (y/n) ') == 0:
                 exit()

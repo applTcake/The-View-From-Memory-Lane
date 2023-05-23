@@ -1,6 +1,7 @@
 import winsound
 from os.path import exists
 import time
+import random
 
 # tinnitus in background?
 #for i in range(10):
@@ -10,16 +11,20 @@ file_path_front = "C:\\Users\\ariel\\ye got games on your phone\\TextAdventure\\
 file_path_back = ".wav"
 
 last_round_lighting = None
-
+sfx = True
 
 def sound(text):
-    file_path = file_path_front + text + file_path_back
-    winsound.PlaySound(file_path, winsound.SND_ASYNC)
+    if sfx:
+        if text == 'light_match':
+            text += str(random.randint(1, 4))
+        file_path = file_path_front + text + file_path_back
+        winsound.PlaySound(file_path, winsound.SND_ASYNC)
 
 
 def loop(text):
-    file_path = file_path_front + text + file_path_back
-    winsound.PlaySound(file_path, winsound.SND_LOOP + winsound.SND_ASYNC)
+    if sfx:
+        file_path = file_path_front + text + file_path_back
+        winsound.PlaySound(file_path, winsound.SND_LOOP + winsound.SND_ASYNC)
 
 # call coin effect 'coin_drop'
 def music(ls, uv):

@@ -55,7 +55,8 @@ def candle_use(item, ls):
             first['candle'] = False
         #Not first time ;)
         else:
-            item.print('The fire returns to the candle, with the vigour of a starved traveller drinking from an oasis.')
+            audio.sound('flame_crackle')
+            item.print('The fire returns to the candle, with the vigour of a starved traveller drinking from an oasis.2&')
         #Blow out match, stop tick
         audio.sound('flame_blow')
         item.print("You blow out the match.")
