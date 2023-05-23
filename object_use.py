@@ -169,6 +169,7 @@ def article_flip(item, ls):
     n = ['n', 'next', 'next']
     b = back
     while ans != b:
+        audio.sound('page_flip')
         # Full article in light
         if ls == Lighting.LIGHT:
             item.print('\n' + news[item.count][1] + '\n\n' + news[item.count][2] + '\n')

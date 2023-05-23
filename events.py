@@ -321,7 +321,7 @@ def rat_kill(count):
     from game_objects import dead_rat, rat, spider, monster_energy_gun, same2
     from main import player, room
     global ratFocus, spiderstatus
-    audio.winsound.PlaySound(None, 0)
+    audio.sound('nothing')
     player.print(count[1])
     #If spider is clearing the scene
     if len(count) == 3:

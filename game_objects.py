@@ -1,4 +1,5 @@
 from item import *
+import audio
 import random
 from object_use import *
 
@@ -16,18 +17,18 @@ arms = Item(
     [meDescribe], same2('What would you like to interact with?'))
 
 
-def bright_candle(item, ls):
-    item.print(item.description[1])
-    item.print("""It is burning passionately.
-  Wax occasionally rolls down its side like tears.""")
+def candle_look(item, ls):
+    item.print("The skinny candle stands atop a rusted, bronze candlestick. It's your favourite fragrance too.")
+    if ls == Lighting.LIGHT:
+        audio.sound('flame_crackle')
+        item.print("""It is burning passionately.
+      Wax occasionally rolls down its side like tears.""")
 
 
 candle = ItemCandle(["candle", 'candlestick'],
                     ["A skinny candle stands tall before you. It is currently unlit.",
                      "A skinny candle stands tall before you, burning with vehemence."],
-                    [None,
-                     "The skinny candle stands atop a rusted, bronze candlestick. It's your favourite fragrance too.",
-                     bright_candle], [candle_use], False)
+                    [candle_look], [candle_use], False)
 
 chair = Item(['chair', 'seat', 'armchair', 'wooden chair', 'wooden seat', 'wooden armchair'],
              [None, """It's a slightly cramped but comfy wooden armchair, complete with a tattered cushion.

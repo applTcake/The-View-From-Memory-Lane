@@ -17,6 +17,8 @@ def sound(text):
     if sfx:
         if text == 'light_match':
             text += str(random.randint(1, 4))
+        if text == 'page_flip':
+            text += str(random.randint(1, 12))
         file_path = file_path_front + text + file_path_back
         winsound.PlaySound(file_path, winsound.SND_ASYNC)
 
