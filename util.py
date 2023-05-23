@@ -10,10 +10,15 @@ pauses = True
 def same2(phrase):
     return [phrase, None, phrase]
 
+def Input(text):
+    #prints text within screenWidth
+    output = input(tr.fill(text, width=screenWidth) + ' ')
+    return output
+
 
 #Multiple-choice questions
 def multi(item, prompt, responses, try_again, original_result, tuples):
-    ans = input(prompt)
+    ans = Input(prompt)
     correct = None
     while True:
         #player response is lower-cased, space-stripped and punctuation-stripped
@@ -40,12 +45,12 @@ def multi(item, prompt, responses, try_again, original_result, tuples):
         #loops program until valid answer - activates try_again function if it exists
         if try_again:
             try_again(item, ans)
-        ans = input(prompt)
+        ans = Input(prompt)
 
 
 #Yes/no questions
 def yn(prompt):
-    ans = input(prompt)
+    ans = Input(prompt)
     while True:
         # player response is lower-cased, space-stripped and punctuation-stripped
         new = ans.lower().rstrip().strip(punctuation)
@@ -58,7 +63,7 @@ def yn(prompt):
             if new in response:
                 return responses.index(response)
         #Loops if valid response is not given
-        ans = input(prompt)
+        ans = Input(prompt)
 
 
 class Printer:
@@ -142,11 +147,13 @@ class Printer:
             if ans == 0:
                 return
             elif ans == 1:
+                if audio.sfx:
+                    audio.sound('nothing')
                 audio.sfx = not audio.sfx
             elif ans == 2:
                 pauses = not pauses
             else:
-                screenWidth = int(input("Enter " + str(settings_list[int(ans-1)][0]).lower() + " "))
+                screenWidth = int(Input("Enter " + str(settings_list[int(ans-1)][0]).lower() + " "))
 
 
 #Time passage
