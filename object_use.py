@@ -82,6 +82,7 @@ def lose_innocence(item, num):
 
 def torch_use(item, ls):
     from game_objects import torch
+    audio.sound('torch_click')
     #Toggle on
     if not torch.lightEmit:
         item.print('A muted blue glow shines out from the torch, barely visible to the eye.')
