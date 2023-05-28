@@ -2,6 +2,7 @@ from main import player, room, end_game
 from events import *
 import audio
 
+
 #start_game()
 #intro()
 #Below starts spider tick

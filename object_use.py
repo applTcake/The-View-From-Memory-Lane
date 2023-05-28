@@ -205,12 +205,13 @@ def article_flip(item, ls):
                         original_result=True, tuples=False)
         # Move articles last
         elif item.count == len(news)-1:
-            if first['coin'] == 0:
-                first['coin'] = 1
             ans = multi(None, "(Type 'previous' to move between articles. Type 'back' to return.) ", (b, p),
                         try_again=None, original_result=True, tuples=False)
         # Move articles middle
         else:
+            if item.count == 2:
+                if first['coin'] == 0:
+                    first['coin'] = 1
             ans = multi(None, "(Type 'previous' or 'next' to move between articles. Type 'back' to return.) ",
                         (b, p, n), try_again=None, original_result=True, tuples=False)
         if ans == p:

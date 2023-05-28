@@ -29,15 +29,15 @@ ratFocus = False
 
 
 def start_game():
-    from util import Printer, yn
+    from util import yn, screenWidth
     from main import player
     title = 'THE VIEW FROM MEMORY LANE'
     #screenWidth-1 if len(title) is an even number
-    player.print('-' * (Printer.screenWidth - 1))
-    num_breaks = int((Printer.screenWidth - 1 - len(title)) / 2)
+    player.print('-' * (screenWidth - 1))
+    num_breaks = int((screenWidth - 1 - len(title)) / 2)
     breaks = ('-' * num_breaks)
     player.print(breaks + title + breaks)
-    player.print('-' * (Printer.screenWidth - 1))
+    player.print('-' * (screenWidth - 1))
     player.print("""~2    an original puzzle text adventure.
   ~2
   (trigger warning: descriptions of gore, violence and death, spiders, rats and musophobia, isolation.)""")
@@ -51,7 +51,7 @@ def start_game():
 
 def intro():
     from main import player
-    from util import Printer
+    from util import screenWidth
     #print five of these underscore thingys just because.
     for i in range(5):
         player.print('_0.2&&&')
@@ -76,7 +76,7 @@ def intro():
      IT'S TIME FOR YOU TO WAKE UP2&'''
 
     for i in range(30):
-        player.print('_' * Printer.screenWidth + '0.1&&&')
+        player.print('_' * screenWidth + '0.1&&&')
     player.print("""~2huh
   ~1Well this isn't ideal
   ~1You can't see a thing in here

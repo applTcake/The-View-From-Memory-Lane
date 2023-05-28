@@ -7,7 +7,7 @@ import random
 #for i in range(10):
 #    winsound.Beep(4280, 4000)
 
-file_path_front = "C:\\Users\\ariel\\ye got games on your phone\\TextAdventure\\resources\\"
+file_path_front = ".\\resources\\"
 file_path_back = ".wav"
 
 last_round_lighting = None
