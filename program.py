@@ -3,8 +3,8 @@ from events import *
 import audio
 
 
-#start_game()
-#intro()
+start_game()
+intro()
 #Below starts spider tick
 #room.start_tick()
 while not end_game:
