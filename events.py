@@ -40,7 +40,7 @@ def start_game():
     player.print('-' * (screenWidth - 1))
     player.print("""~2    an original puzzle text adventure.
   ~2
-  (trigger warning: descriptions of gore, violence and death, spiders, rats and musophobia, isolation.)""")
+  (content warning: descriptions of gore, violence and death, spiders, rats and musophobia, isolation.)""")
     #Start-of-game formalities
     if yn('Proceed? (yes/no) ') == 1:
         exit()
